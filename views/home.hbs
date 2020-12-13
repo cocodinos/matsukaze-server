@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <html lang="en" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>{{params.title}}</title>
+        {{>head}}
+    </head>
+  </head>
+  <body>
+    {{>navbar}}
+    {{#if splash}}
+      <div class="block splash" style="background: #000 url('/img/artwork/{{params.images.splash}}')  no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
+    {{/if}}
+    {{>copyright}}
+    {{>footer}}
+  </body>
+</html>

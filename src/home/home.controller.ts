@@ -5,11 +5,15 @@ import { I18n, I18nContext } from 'nestjs-i18n';
 export class HomeController {
 
   @Get()
-  @Render('index')
+  @Render('home')
   async root(@I18n() i18n: I18nContext) {
     var params = {
-      navbar: await i18n.translate("home.NAVBAR")
+      navbar: await i18n.translate("home.navbar"),
+      images: {
+        splash: await i18n.translate("home.images.splash")
+      },
+      title: await i18n.translate("home.titles.splash")
     }
-    return params;
+    return {splash: true, params: params};
   }
 }

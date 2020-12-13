@@ -1,8 +1,17 @@
 {
-  "NAVBAR": {
-    "SYNOPSIS": "Συνοψη",
-    "TEAM": "Ομαδα",
-    "CONTACT": "Επικοινωνια",
-    "LANGUAGE": "Γλωσσα"
+  "navbar": {
+    "synopsis": "Συνοψη",
+    "team": "Ομαδα",
+    "contact": "Επικοινωνια",
+    "language": "Γλωσσα"
+  },
+  "images": {
+    "splash": "splash-EL.jpg"
+  },
+  "text": {
+
+  },
+  "titles": {
+    "splash": "Διγενής"
   }
 }

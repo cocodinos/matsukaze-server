@@ -8,8 +8,8 @@ html, body {
   height: 100% !important;
   font-size: 12pt;
   font-family: sans-serif,Arial;
-  background-color: #080808;
-  color: #323232;
+  background-color: rgb(255,255,255,1);
+  color: rgb(0,0,0,1);
 }
 
 .test {
@@ -21,7 +21,6 @@ html, body {
   width: 100%;
   height: 100%;
   color: #fff;
-
 }
 
 .text-shadow {
@@ -50,4 +49,20 @@ html, body {
 .navbar-brand img {
   max-height: 30px;
   opacity: 0.5;
+}
+
+/* COPYRIGHT*******************************************************************/
+.copyright {
+  height: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: rgb(42,8,8,1);
+}
+
+.copyright > div > p {
+  font-size: small;
+  color: rgba(255,255,255,0.6);
+  margin: auto;
 }

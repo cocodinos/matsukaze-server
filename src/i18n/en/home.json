@@ -1,8 +1,17 @@
 {
-  "NAVBAR": {
-    "SYNOPSIS": "Synopsis",
-    "TEAM": "Team",
-    "CONTACT": "Contact",
-    "LANGUAGE": "Language"
+  "navbar": {
+    "synopsis": "Synopsis",
+    "team": "Team",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "images": {
+    "splash": "splash-EN.jpg"
+  },
+  "text": {
+
+  },
+  "titles": {
+    "splash": "Digenes"
   }
 }
