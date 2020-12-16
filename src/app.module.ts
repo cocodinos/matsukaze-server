@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import * as path from 'path';
 import { I18nModule, I18nJsonParser, QueryResolver, HeaderResolver, AcceptLanguageResolver, CookieResolver } from 'nestjs-i18n';
-import { HomeController } from './home/home.controller';
-import { DataService } from './data/data.service';
+import { HomeController } from './controllers/home/home.controller';
+import { DataService } from './services/data/data.service';
+import { RootController } from './controllers/root/root.controller';
 
 
 @Module({
@@ -26,7 +27,7 @@ import { DataService } from './data/data.service';
       ],
     })
   ],
-  controllers: [HomeController],
+  controllers: [HomeController, RootController],
   providers: [DataService],
 })
 export class AppModule {}

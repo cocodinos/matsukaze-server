@@ -9,10 +9,81 @@
   </head>
   <body>
     {{>navbar}}
-    {{#if splash}}
-      <div class="block splash" style="background: #000 url('/img/artwork/{{params.images.splash}}')  no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
-    {{/if}}
-    {{>copyright}}
+
+    <!-- splash -->
+    <div class="block" style="background: #000 url('/img/artwork/{{params.images.splash}}') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
+
+    <!-- bardas -->
+    <div class="block" style="background: #000 url('/img/artwork/bardas.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;">
+      <div class="bardas">
+          <div>
+            <h1>«Στην κοψη του σπαθιου <br />
+            κρινομαστε ολοι»</h1>
+          </div>
+      </div>
+    </div>
+
+    <!-- team -->
+    <div id="team" class="team">
+      <div class="title">
+        <h1>Team</h1>
+      </div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="card">
+              <a data-toggle="collapse" href="#konstantinos" role="button" aria-expanded="false" aria-controls="konstantinos"><img class="card-img-top" src="/img/photos/konstantinos.jpg" alt="Card image cap"></a>
+              <div class="card-body">
+                <h4 class="card-title"><a data-toggle="collapse" href="#konstantinos" role="button" aria-expanded="false" aria-controls="konstantinos">Konstantinos Dimitriou</a></h4>
+                <div class="collapse multi-collapse" id="konstantinos">
+                  <p class="card-text">Konstantinos was born in Athens, Greece.  He has lived, worked and travelled extensively across most of Asia, including China, India, Japan, Korea and South East Asia.  He has authored multiple articles for business journals and newspapers, including the Greek daily Kathimerini.  Digenes is his first graphic novel. He holds degrees in Electrical Engineering from Cambridge University and an MBA with High Distinction from Harvard Business School. Konstantinos lives in Singapore.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="card">
+              <a data-toggle="collapse" href="#kallia" role="button" aria-expanded="false" aria-controls="kallia"><img class="card-img-top" src="/img/photos/kallia.jpg" alt="Card image cap"></a>
+              <div class="card-body">
+                <h4 class="card-title"><a data-toggle="collapse" href="#kallia" role="button" aria-expanded="false" aria-controls="kallia">Kallia Papadaki</a></h4>
+                <div class="collapse multi-collapse" id="kallia">
+                  <p class="card-text">Kallia was born in Didimoticho, Greece. She is a novelist, poet and screenwriter. Her novel Dendrites (Polis Publishers, 2015), received the European Union Prize for Literature in 2017. Her short story collection The Back-Lot Sound (Polis Publishers, 2009), won the New Writers Award from the Greek literary journal Diavazo. September, her first feature script won, in 2010, the International Balkan Fund script development award, received the Nipkow Scholarship in Berlin, and premiered at the 48th Karlovy Vary IFF. Kallia lives in Greece.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="card">
+              <a data-toggle="collapse" href="#avgi" role="button" aria-expanded="false" aria-controls="avgi"><img class="card-img-top" src="/img/photos/avgi.jpg" alt="Card image cap"></a>
+              <div class="card-body">
+                <h4 class="card-title"><a data-toggle="collapse" href="#avgi" role="button" aria-expanded="false" aria-controls="avgi">Avgi Kanaki</a></h4>
+                <div class="collapse multi-collapse" id="avgi">
+                  <p class="card-text">Avgo is a greek, self-taught comic artist and illustrator that started their academic life by studying Philosophy of Science, but were always drawn to comics. A few semesters and a degree later they decided it’d be better to just follow their dream and do what they always wanted to do instead and just draw. That’s how they landed their first participation in IDW’s team project Womanthology: Heroic. It was enough to make them fall in love with the art of making comics and they never looked back. Since then they’ve worked with people all over the world as a freelance illustrator and comic artist and their first personal graphic novel as an artist (with writer Paul Mallory), “Greta’s Grimoire, Book1: Initiations” was published in Greece by Jemma Press, followed by “Bestiary”. They’re currently working as a writer and artist on a love project “Equidistance”, a queer, multidimensional mystery/action story alongside co-writer and co-artist Dennis Yatras.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="card">
+              <a data-toggle="collapse" href="#dennis" role="button" aria-expanded="false" aria-controls="dennis"><img class="card-img-top" src="/img/photos/dennis.jpg" alt="Card image cap"></a>
+              <div class="card-body">
+                <h4 class="card-title"><a data-toggle="collapse" href="#dennis" role="button" aria-expanded="false" aria-controls="dennis">Dennis Yatras</a></h4>
+                <div class="collapse multi-collapse" id="dennis">
+                  <p class="card-text">Dennis Yatras was born on the island of Zakynthos, and he’s been living in Athens for the past years. Growing up he was acquainted with Western and Japanese animation and games and became infatuated with their style ever since. As a hobby, he began doodling at a very young age and never seemed to break the habit. After graduating from high school, he enrolled in the Athens School of Graphic Arts in PA.D.A., honing his illustration and design skills. At the same time he decided to dive deeper in the anime and cosplay scene, the latter of which ended up leading him to a second BA degree in Middlesex University’s Fashion Design course some years later. Obsessed with the aesthetic of the 80’s and early 90’s pop culture, he loves designing characters that inhabit his strange yet familiar and nostalgic worlds. Lately he decided to follow his desire to complete Dark Practice, a spooky comic about a team of teenage witches' adventures in a small town of northern England. The first issue of his passion project made its debut at Comicdom CON Athens 2018. From then on he attended many other conventions in Greece and Europe. In 2019 he started to write and illustrate the graphic novel “Equidistance” along with his long-time friend Avgo. The four-parts of this new work are going to be published by Nerdula Creative Lab starting from the first third of 2021.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <div class="container-fluid">
+        <p>© 2018 Aethon Holdings Private Limited. <br />All rights reserved.</p>
+      </div>
+    </div>
+
     {{>footer}}
   </body>
 </html>
