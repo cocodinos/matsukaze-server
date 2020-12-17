@@ -10,8 +10,9 @@ export class HomeController {
     var params = {
       navbar: await i18n.translate("home.navbar"),
       images: {
-        splash: await i18n.translate("home.images.splash")
+        splash: await i18n.translate("home.images.splash"),
       },
+      text: await i18n.translate("home.text"),
       title: await i18n.translate("home.titles.splash")
     }
     return {splash: true, params: params};

@@ -11,7 +11,11 @@
     "splash": "splash-EL.jpg"
   },
   "text": {
-
+    "quote": {
+      "row1": "ΣΤΗΝ ΚΟΨΗ ΤΟΥ ΣΠΑΘΙΟΥ",
+      "row2": "ΚΡΙΝΟΜΑΣΤΕ ΟΛΟΙ"
+    },
+    "synopsis": "synopsis"
   },
   "titles": {
     "splash": "Διγενής"
