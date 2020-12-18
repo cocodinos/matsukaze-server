@@ -14,11 +14,19 @@
     <div class="block" style="background: #000 url('/img/artwork/{{params.images.splash}}') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
 
     <!-- digenes -->
-    <div class="block" style="background: #000 url('/img/artwork/digenes.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;">
-      <div class="quote">
-          <div>
-            <h1>{{params.text.quote.row1}}<br />{{params.text.quote.row2}}</h1>
+    <div style="height: 100%; width: 100%; position: relative;">
+      <div class="container-fluid" style="height: 100%">
+        <div class="row no-gutters" style="height: 100%">
+          <div class="col-lg-6">
+            <div style="height: 100%; width: 100%; background: #000 url('/img/artwork/digenes.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
           </div>
+          <div class="col-lg-6">
+            <div style="height: 100%; width: 100%; background: #000 url('/img/artwork/bardas.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="quote">
+        <h1 class="quote">{{params.text.quote.row1}}<br />{{params.text.quote.row2}}</h1>
       </div>
     </div>
 
@@ -31,24 +39,24 @@
               <h1 class="title">Synopsis</h1>
             </div>
           </div>
-          <div class="col-lg-12">
-            <p>
-              {{params.text.synopsis.premise}}
-            </p>
-            <p>
-              {{params.text.synopsis.detail}}
-            </p>
+        </div>
+        <div class="block" style="background: #000 url('/img/artwork/memories.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;">
+        <div class="row">
+          <div class="col-lg-3"></div>
+          <div class="col-lg-6 justify-content-center">
+              <div class="card" style="background-color: rgba(0,0,0,0.8)">
+                <div class="title">
+                  <h3>{{{params.text.synopsis.premise}}}</h3>
+                </div>
+                <div class="card-text">
+                  <h5>{{{params.text.synopsis.punchline}}}</h5>
+                  {{{params.text.synopsis.detail}}}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3"></div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- bardas -->
-    <div class="block" style="background: #000 url('/img/artwork/bardas.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;">
-      <div class="quote">
-          <div>
-            <h1>THE ONLY THING DEMONS FEAR<br />IS ONE OF THEIR OWN</h1>
-          </div>
       </div>
     </div>
 
@@ -116,9 +124,7 @@
     </div>
 
     <div class="copyright">
-      <div class="container-fluid">
-        <p>© 2018 Aethon Holdings Private Limited. <br />All rights reserved.</p>
-      </div>
+      <p>© 2018 Aethon Holdings Private Limited. <br />All rights reserved.</p>
     </div>
 
     {{>footer}}
