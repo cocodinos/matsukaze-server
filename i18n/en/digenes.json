@@ -1,8 +1,8 @@
 {
   "navbar": {
     "language": "Language",
-    "order": "Order",
-    "read": "Read online",
+    "order": "Books",
+    "read": "Online",
     "login": "Login"
   },
   "content": {

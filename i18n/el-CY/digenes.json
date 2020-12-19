@@ -1,8 +1,8 @@
 {
   "navbar": {
     "language": "Γλωσσα",
-    "order": "Παραγγελια",
-    "read": "Διαβαστε online",
+    "order": "Βιβλια",
+    "read": "Online",
     "login": "Login"
   },
   "content": {
