@@ -12,17 +12,17 @@
     {{>navbar}}
 
     <!-- splash -->
-    <div class="block" style="background: #000 url('/img/artwork/{{params.content.images.splash}}') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
+    <div class="block" style="background: #000 url('/home/img/artwork/{{params.content.images.splash}}') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
 
     <!-- quote -->
     <div style="height: 100%; width: 100%; position: relative;">
       <div class="container-fluid" style="height: 100%">
         <div class="row no-gutters" style="height: 100%">
           <div class="col-lg-6">
-            <div style="height: 100%; width: 100%; background: #000 url('/img/artwork/digenes.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
+            <div style="height: 100%; width: 100%; background: #000 url('/home/img/artwork/digenes.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
           </div>
           <div class="col-lg-6">
-            <div style="height: 100%; width: 100%; background: #000 url('/img/artwork/bardas.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
+            <div style="height: 100%; width: 100%; background: #000 url('/home/img/artwork/bardas.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;"></div>
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@
             </div>
           </div>
         </div>
-        <div class="block" style="background: #000 url('/img/artwork/memories.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;">
+        <div class="block" style="background: #000 url('/home/img/artwork/memories.jpg') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover;">
         <div class="row">
           <div class="col-lg-2"></div>
           <div class="col-lg-8">
@@ -75,7 +75,7 @@
           {{#each params.content.text.team}}
           <div class="col-lg-3">
             <div class="card">
-              <a data-toggle="collapse" href="#{{@key}}" role="button" aria-expanded="false" aria-controls="{{@key}}"><img class="card-img-top" src="{{this.img}}" alt="Card image cap"></a>
+              <a data-toggle="collapse" href="#{{@key}}" role="button" aria-expanded="false" aria-controls="{{@key}}"><img class="card-img-top" src="/home/img/photos/{{this.img}}" alt="Card image cap"></a>
               <div class="card-body">
                 <h4 class="card-title"><a data-toggle="collapse" href="#{{@key}}" role="button" aria-expanded="false" aria-controls="{{@key}}">{{this.name}}</a></h4>
                 <div class="collapse multi-collapse" id="{{@key}}">
