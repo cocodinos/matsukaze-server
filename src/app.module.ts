@@ -9,14 +9,10 @@ import { RootController } from './controllers/root/root.controller';
 @Module({
   imports: [
     I18nModule.forRoot({
-      fallbackLanguage: 'en',
-      fallbacks: {
-        'en-*': 'en',
-        'el-*': 'el'
-      },
+      fallbackLanguage: "en",
       parser: I18nJsonParser,
       parserOptions: {
-        path: path.join(__dirname, '/i18n/'),
+        path: path.join(__dirname, '..', '/i18n/'),
         watch: true // to remove this in deployment for speed
       },
       resolvers: [

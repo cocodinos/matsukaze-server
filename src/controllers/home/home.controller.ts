@@ -7,7 +7,7 @@ export class HomeController {
   @Get()
   @Render('home')
   async root(@I18n() i18n: I18nContext) {
-    var params = {
+    const params = {
       navbar: await i18n.translate("digenes.navbar"),
       content: await i18n.translate("digenes.content.home")
     }
