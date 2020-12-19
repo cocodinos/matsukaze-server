@@ -14,15 +14,15 @@
                 <li class="nav-item">
                     <a class="nav-link text-shadow" href="/home/read{{lang}}">{{params.navbar.read}}</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-shadow" href="/home/login{{lang}}">{{params.navbar.login}}</a>
-                </li>
                 <li class="dropdown">
                   <a class="nav-link text-shadow dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">{{params.navbar.language}}</a>
                   <div class="dropdown-menu" role="menu">
                       <a class="dropdown-item js-scroll-trigger" href="{{url}}?lang=en">English</a>
                       <a class="dropdown-item js-scroll-trigger" href="{{url}}?lang=el">Ελληνικα</a>
                   </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-shadow" href="/home/login{{lang}}">{{params.navbar.login}}</a>
                 </li>
             </ul>
         </div>
