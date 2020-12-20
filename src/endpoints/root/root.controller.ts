@@ -1,8 +1,8 @@
-import { Get, Controller, Render, Query } from '@nestjs/common';
+import { Controller, Get, Query, Render, Res } from '@nestjs/common';
 import { I18n, I18nContext } from 'nestjs-i18n';
 
-@Controller("home")
-export class HomeController {
+@Controller()
+export class RootController {
 
   @Get()
   @Render("home")
@@ -15,11 +15,4 @@ export class HomeController {
     }
     return {url: "/home/", lang: lang, params: viewParams};
   }
-
-  @Get("order")
-  // @Render("home")
-  async order(@I18n() i18n: I18nContext) {
-    
-  }
-
 }

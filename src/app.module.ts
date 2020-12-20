@@ -1,13 +1,25 @@
 import { Module } from '@nestjs/common';
 import * as path from 'path';
 import { I18nModule, I18nJsonParser, QueryResolver, HeaderResolver, AcceptLanguageResolver, CookieResolver } from 'nestjs-i18n';
-import { HomeController } from './controllers/home/home.controller';
-import { DataService } from './services/data/data.service';
-import { RootController } from './controllers/root/root.controller';
+import { SequelizeModule } from '@nestjs/sequelize';
 
+import { RootController } from './endpoints/root/root.controller';
+import { DataService } from './services/data/data.service';
+import { User } from './endpoints/api/0-1/user/user.model';
+import { UserModule } from './endpoints/api/0-1/user/user.module';
 
 @Module({
   imports: [
+    UserModule,
+    SequelizeModule.forRoot({
+      dialect: 'mariadb',
+      host: 'test.aethon.sg',
+      port: 3306,
+      username: 'root',
+      password: 'w3WqrDNYDjmH',
+      database: 'matsukaze',
+      models: [User]
+    }),
     I18nModule.forRoot({
       fallbackLanguage: "en",
       parser: I18nJsonParser,
@@ -23,7 +35,7 @@ import { RootController } from './controllers/root/root.controller';
       ],
     })
   ],
-  controllers: [HomeController, RootController],
+  controllers: [RootController],
   providers: [DataService],
 })
 export class AppModule {}

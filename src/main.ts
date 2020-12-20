@@ -15,7 +15,6 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
   app.use(compression());
-
   await app.listen(3000);
 }
 bootstrap();
