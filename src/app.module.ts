@@ -7,10 +7,12 @@ import { RootController } from './endpoints/root/root.controller';
 import { DataService } from './services/data/data.service';
 import { User } from './endpoints/api/0-1/user/user.model';
 import { UserModule } from './endpoints/api/0-1/user/user.module';
+import { AuthModule } from './endpoints/api/0-1/auth/auth.module';
 
 @Module({
   imports: [
     UserModule,
+    AuthModule,
     SequelizeModule.forRoot({
       dialect: 'mariadb',
       host: 'test.aethon.sg',
@@ -33,7 +35,8 @@ import { UserModule } from './endpoints/api/0-1/user/user.module';
         AcceptLanguageResolver,
         new CookieResolver(['lang', 'locale', 'l']),
       ],
-    })
+    }),
+    AuthModule
   ],
   controllers: [RootController],
   providers: [DataService],

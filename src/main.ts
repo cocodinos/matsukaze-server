@@ -15,6 +15,7 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
   app.use(compression());
+  app.enableCors({origin: true, methods: ['GET', 'PUT', 'POST'], allowedHeaders: ['Content-Type', 'Accept'], maxAge: 1728000})
   await app.listen(3000);
 }
 bootstrap();
