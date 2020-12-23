@@ -8,9 +8,10 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async verifyUser(email: string, password: string): Promise<User> {
-    return this.userService.findOne(email).then( user => {
-      if (user && bcrypt.compare(password, user.hash)) return user; else return null;
-    });
+    var user: User = null;
+    const tmpUser: User = await this.userService.findOne(email);
+    if (tmpUser && await bcrypt.compare(password, tmpUser.hash)) user = tmpUser;
+    return user;
   }
 
   async hashPassword(password: string): Promise<string> {

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Role } from '../role/role.model';
 import { User } from './user.model';
 
 @Injectable()
@@ -11,11 +12,22 @@ export class UserService {
   }
 
   async findOne(email: string): Promise<User> {
-    return this.userModel.findOne({where: {email}});
+    const user = await this.userModel.findOne({
+      attributes: ['id', 'email', 'hash'],
+      where: {email},
+      include: [{
+        model: Role,
+        attributes: ['id', 'name'],
+        through: {
+          attributes: []
+        }
+      }]
+    });
+    return user;
   }
 
-  async create(email: string, password: string) {
-    
+  async create(email: string, password: string, roles: number[]): Promise<User> {
+    return null;
   }
 
   async delete(id: string): Promise<void> {

@@ -8,6 +8,8 @@ import { DataService } from './services/data/data.service';
 import { User } from './endpoints/api/0-1/user/user.model';
 import { UserModule } from './endpoints/api/0-1/user/user.module';
 import { AuthModule } from './endpoints/api/0-1/auth/auth.module';
+import { UserRole } from './endpoints/api/0-1/userRole/user.role.model';
+import { Role } from './endpoints/api/0-1/role/role.model';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { AuthModule } from './endpoints/api/0-1/auth/auth.module';
       username: 'root',
       password: 'w3WqrDNYDjmH',
       database: 'matsukaze',
-      models: [User]
+      models: [User, Role, UserRole]
     }),
     I18nModule.forRoot({
       fallbackLanguage: "en",
