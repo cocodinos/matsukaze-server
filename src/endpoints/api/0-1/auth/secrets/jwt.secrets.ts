@@ -1,0 +1,4 @@
+export const jwtConstants = {
+  secret: 'A1E8496ACF10E282FDCA270B998155720EBE0EB050C6DB4DA82166FC21F5863A',
+  expiresIn: '86400s'
+};
