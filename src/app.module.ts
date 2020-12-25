@@ -8,6 +8,7 @@ import { DataService } from './services/data/data.service';
 import { UserModule } from './endpoints/api/0-1/user/user.module';
 import { AuthModule } from './endpoints/api/0-1/auth/auth.module';
 import { StoryModule } from './endpoints/api/0-1/story/story.module';
+import { ActModule } from './endpoints/api/0-1/act/act.module';
 
 // Sequelize data models
 import { User } from './models/user.model';
@@ -26,7 +27,7 @@ import { DialogueLine } from './models/dialogue.line.model';
 import { I18nBundle } from './models/i18n.bundle.model';
 import { I18nBundleText } from './models/i18n.bundle.text.model';
 import { PublicationPage } from './models/publication.page.model';
-
+import { SceneModule } from './endpoints/api/0-1/scene/scene.module';
 
 
 @Module({
@@ -34,6 +35,8 @@ import { PublicationPage } from './models/publication.page.model';
     UserModule,
     AuthModule,
     StoryModule,
+    ActModule,
+    SceneModule,
     SequelizeModule.forRoot({
       dialect: 'mariadb',
       host: 'test.aethon.sg',
