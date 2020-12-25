@@ -5,16 +5,35 @@ import { SequelizeModule } from '@nestjs/sequelize';
 
 import { RootController } from './endpoints/root/root.controller';
 import { DataService } from './services/data/data.service';
-import { User } from './endpoints/api/0-1/user/user.model';
 import { UserModule } from './endpoints/api/0-1/user/user.module';
 import { AuthModule } from './endpoints/api/0-1/auth/auth.module';
-import { UserRole } from './endpoints/api/0-1/userRole/user.role.model';
-import { Role } from './endpoints/api/0-1/role/role.model';
+import { StoryModule } from './endpoints/api/0-1/story/story.module';
+
+// Sequelize data models
+import { User } from './models/user.model';
+import { Role } from './models/role.model';
+import { UserRole } from './models/user.role.model';
+import { Project } from './models/project.model';
+import { ProjectUser } from './models/project.user.model';
+import { Story } from './models/story.model';
+import { Act } from './models/act.model';
+import { Scene } from './models/scene.model';
+import { Beat } from './models/beat.model';
+import { Language } from './models/language.model';
+import { Page } from './models/page.model';
+import { Publication } from './models/publication.model';
+import { DialogueLine } from './models/dialogue.line.model';
+import { I18nBundle } from './models/i18n.bundle.model';
+import { I18nBundleText } from './models/i18n.bundle.text.model';
+import { PublicationPage } from './models/publication.page.model';
+
+
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
+    StoryModule,
     SequelizeModule.forRoot({
       dialect: 'mariadb',
       host: 'test.aethon.sg',
@@ -22,7 +41,8 @@ import { Role } from './endpoints/api/0-1/role/role.model';
       username: 'root',
       password: 'w3WqrDNYDjmH',
       database: 'matsukaze',
-      models: [User, Role, UserRole]
+      models: [ User, Role, UserRole, Project, ProjectUser, Story, Act, Scene, Beat, Language, Page, Publication, DialogueLine, I18nBundle, I18nBundleText, PublicationPage ],
+      // logging: false
     }),
     I18nModule.forRoot({
       fallbackLanguage: "en",
@@ -38,7 +58,7 @@ import { Role } from './endpoints/api/0-1/role/role.model';
         new CookieResolver(['lang', 'locale', 'l']),
       ],
     }),
-    AuthModule
+    AuthModule,
   ],
   controllers: [RootController],
   providers: [DataService],
