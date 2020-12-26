@@ -16,7 +16,6 @@ export class ActService {
   }
 
   async findAllStoryActs(params: any): Promise<any> {
-    console.log(params);
     try {
       return this.actModel.findAll({
         where: params,

@@ -10,6 +10,9 @@ export class Scene extends Model<Scene> {
   @Column
   position: number;
 
+  @Column
+  title: string;
+
   @Column(DataType.TEXT)
   summary: string;
 
