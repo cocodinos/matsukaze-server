@@ -1,4 +1,4 @@
-import { Controller, Request, Get, UseGuards, Query } from '@nestjs/common';
+import { Controller, Request, Get, UseGuards, Query, Post, Body } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
 import { ActService } from './act.service';
 
@@ -15,6 +15,13 @@ export class ActController {
   async getActs(@Query() query) {
     const acts = this.actService.getStoryActs(query?.storyId);
     return acts;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("updateAct")
+  async updateAct(@Body() data) {
+    const scene = this.actService.updateAct(data);
+    return scene;
   }
 
 }

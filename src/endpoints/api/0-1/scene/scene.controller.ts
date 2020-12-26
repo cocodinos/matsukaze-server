@@ -20,8 +20,7 @@ export class SceneController {
   @UseGuards(JwtAuthGuard)
   @Post("updateScene")
   async updateScene(@Body() data) {
-    const scene = this.sceneService.updateScene(data);
-    return scene;
+    return this.sceneService.updateScene(data);
   }
 
 }

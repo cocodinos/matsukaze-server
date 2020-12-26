@@ -6,6 +6,9 @@ import { Beat } from 'src/models/beat.model';
 @Injectable()
 export class SceneService {
 
+  attributes: any = ['id', 'actId', 'position', 'title', 'summary', 'notes'];
+  order: any = [['position', 'ASC']];
+
   constructor(
     @InjectModel(Scene)private sceneModel: typeof Scene,
   ) {}
@@ -13,6 +16,24 @@ export class SceneService {
   async getActScenes(actId:string): Promise<any> {
     var story = await this.findAllActScenes({actId: actId});
     return story;
+  }
+
+  async findOneScene(params: any): Promise<any> {
+    try {
+      return this.sceneModel.findOne({
+        where: params,
+        include: [
+          {
+            model: Beat,
+            attributes: ['id']
+          },
+        ],
+        order: this.order,
+        attributes: this.attributes,
+      });
+    } catch {
+      return null;
+    }
   }
 
   async findAllActScenes(params: any): Promise<any> {
@@ -25,8 +46,8 @@ export class SceneService {
             attributes: ['id']
           },
         ],
-        order: [['position', 'ASC']],
-        attributes: ['id', 'actId', 'position', 'title', 'summary', 'notes'],
+        order: this.order,
+        attributes: this.attributes,
       });
     } catch {
       return null;
@@ -46,21 +67,4 @@ export class SceneService {
     }
   }
 
-  async findOneScene(params: any): Promise<any> {
-    try {
-      return this.sceneModel.findOne({
-        where: params,
-        include: [
-          {
-            model: Beat,
-            attributes: ['id']
-          },
-        ],
-        order: [['position', 'ASC']],
-        attributes: ['id', 'actId', 'position', 'title', 'summary', 'notes'],
-      });
-    } catch {
-      return null;
-    }
-  }
 }

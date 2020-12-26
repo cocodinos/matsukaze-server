@@ -6,6 +6,9 @@ import { Scene } from 'src/models/scene.model';
 @Injectable()
 export class ActService {
 
+  attributes:any = ['id', 'storyId', 'title', 'position', 'summary', 'notes'];
+  order:any = [['position', 'ASC']];
+
   constructor(
     @InjectModel(Act)private actModel: typeof Act,
   ) {}
@@ -15,7 +18,25 @@ export class ActService {
     return story;
   }
 
-  async findAllStoryActs(params: any): Promise<any> {
+  async findOneAct(params: any): Promise<Act> {
+    try {
+      return this.actModel.findOne({
+        where: params,
+        include: [
+          {
+            model: Scene,
+            attributes: ['id']
+          },
+        ],
+        order: this.order,
+        attributes: this.attributes,
+      });
+    } catch {
+      return null;
+    }
+  }
+
+  async findAllStoryActs(params: any): Promise<Act[]> {
     try {
       return this.actModel.findAll({
         where: params,
@@ -25,9 +46,22 @@ export class ActService {
             attributes: ['id']
           },
         ],
-        order: [['position', 'ASC']],
-        attributes: ['id', 'storyId', 'title', 'position', 'summary', 'notes'],
+        order: this.order,
+        attributes: this.attributes,
       });
+    } catch {
+      return null;
+    }
+  }
+
+  async updateAct(params: any): Promise<Act> {
+    try {
+      var act: Act | PromiseLike<Act>;
+      act = await this.findOneAct({id: params?.id})
+      if(act) {
+        act.update(params, {fields: ['storyId', 'title', 'position', 'summary', 'notes']});
+      }
+      return act;
     } catch {
       return null;
     }
