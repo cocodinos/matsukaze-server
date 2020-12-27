@@ -18,6 +18,24 @@ export class ActService {
     return story;
   }
 
+  async createAct(params: any): Promise<Act> {
+    var act = null;
+    if(params?.storyId) {
+      var maxPosition = await this.getMaxPosition({storyId: params?.storyId})
+      if(maxPosition) {
+        params.position = maxPosition+1;
+        act = await this.actModel.create(params);
+      }
+    }
+    return act;
+  }
+
+  async deleteAct(params: any): Promise<Act> {
+    var act = await this.findOne(params);
+    act.destroy();
+    return act;
+  }
+
   async findOne(params: any): Promise<Act> {
     try {
       return this.actModel.findOne({

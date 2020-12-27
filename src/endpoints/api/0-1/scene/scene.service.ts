@@ -24,9 +24,8 @@ export class SceneService {
     if(params?.actId) {
       var maxPosition = await this.getMaxPosition({actId: params?.actId})
       if(maxPosition) {
-        params.position = maxPosition++;
+        params.position = maxPosition+1;
         scene = await this.sceneModel.create(params);
-        console.log(scene);
       }
     }
     return scene;
@@ -40,7 +39,6 @@ export class SceneService {
 
   async findOne(params: any): Promise<any> {
     try {
-      console.log(params);
       return this.sceneModel.findOne({
         where: params,
         include: [
@@ -77,8 +75,7 @@ export class SceneService {
 
   async updateScene(params: any): Promise<Scene> {
     try {
-      var scene;
-      scene = await this.findOne({id: params?.id})
+      var scene = await this.findOne({id: params?.id})
       if(scene) {
         scene.update(params, {fields: ['actId', 'position', 'title', 'summary', 'notes']});
       }

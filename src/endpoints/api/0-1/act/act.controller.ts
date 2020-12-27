@@ -31,4 +31,20 @@ export class ActController {
     return scene;
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post("createAct")
+  async createScene(@Body() data) {
+    const act = this.actService.createAct(data);
+    return act;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("deleteAct")
+  async deleteAct(@Body() data) {
+    console.log(data);
+    const act = this.actService.deleteAct(data);
+    return act;
+  }
+
+
 }
