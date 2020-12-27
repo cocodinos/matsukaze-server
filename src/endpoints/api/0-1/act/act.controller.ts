@@ -11,6 +11,13 @@ export class ActController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @Get("getAct")
+  async getAct(@Query() query) {
+    const act = this.actService.findOne({id: query?.id});
+    return act;
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get("getActs")
   async getActs(@Query() query) {
     const acts = this.actService.getStoryActs(query?.storyId);

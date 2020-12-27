@@ -18,7 +18,7 @@ export class ActService {
     return story;
   }
 
-  async findOneAct(params: any): Promise<Act> {
+  async findOne(params: any): Promise<Act> {
     try {
       return this.actModel.findOne({
         where: params,
@@ -57,7 +57,7 @@ export class ActService {
   async updateAct(params: any): Promise<Act> {
     try {
       var act: Act | PromiseLike<Act>;
-      act = await this.findOneAct({id: params?.id})
+      act = await this.findOne({id: params?.id})
       if(act) {
         act.update(params, {fields: ['storyId', 'title', 'position', 'summary', 'notes']});
       }
@@ -65,5 +65,9 @@ export class ActService {
     } catch {
       return null;
     }
+  }
+
+  async getMaxPosition(params: any): Promise<number> {
+    return this.actModel.max('position', {where: params});
   }
 }

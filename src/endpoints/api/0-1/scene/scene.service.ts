@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Scene } from 'src/models/scene.model';
 import { Beat } from 'src/models/beat.model';
+import { ActService } from '../act/act.service';
 
 @Injectable()
 export class SceneService {
@@ -13,13 +14,33 @@ export class SceneService {
     @InjectModel(Scene)private sceneModel: typeof Scene,
   ) {}
 
-  async getActScenes(actId:string): Promise<any> {
+  async getActScenes(actId: string): Promise<any> {
     var story = await this.findAllActScenes({actId: actId});
     return story;
   }
 
-  async findOneScene(params: any): Promise<any> {
+  async createScene(params: any): Promise<Scene> {
+    var scene = null;
+    if(params?.actId) {
+      var maxPosition = await this.getMaxPosition({actId: params?.actId})
+      if(maxPosition) {
+        params.position = maxPosition++;
+        scene = await this.sceneModel.create(params);
+        console.log(scene);
+      }
+    }
+    return scene;
+  }
+
+  async deleteScene(params: any): Promise<Scene> {
+    var scene = await this.findOne(params);
+    scene?.destroy();
+    return scene;
+  }
+
+  async findOne(params: any): Promise<any> {
     try {
+      console.log(params);
       return this.sceneModel.findOne({
         where: params,
         include: [
@@ -57,7 +78,7 @@ export class SceneService {
   async updateScene(params: any): Promise<Scene> {
     try {
       var scene;
-      scene = await this.findOneScene({id: params?.id})
+      scene = await this.findOne({id: params?.id})
       if(scene) {
         scene.update(params, {fields: ['actId', 'position', 'title', 'summary', 'notes']});
       }
@@ -65,6 +86,10 @@ export class SceneService {
     } catch {
       return null;
     }
+  }
+
+  async getMaxPosition(params: any): Promise<number> {
+    return this.sceneModel.max('position', {where: params});
   }
 
 }
