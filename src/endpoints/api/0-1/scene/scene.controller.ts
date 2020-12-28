@@ -11,37 +11,23 @@ export class SceneController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get("getScene")
-  async getScene(@Query() query) {
-    const scene = this.sceneService.findOne({id: query?.id});
-    return scene;
-  }
+  @Get("get")
+  async get(@Query() query) { return this.sceneService.get({id: query?.id}); }
 
   @UseGuards(JwtAuthGuard)
-  @Get("getScenes")
-  async getScenes(@Query() query) {
-    const scenes = this.sceneService.getActScenes(query?.actId);
-    return scenes;
-  }
+  @Get("gets")
+  async gets(@Query() query) { return this.sceneService.gets({actId: query?.actId}); }
 
   @UseGuards(JwtAuthGuard)
-  @Post("updateScene")
-  async updateScene(@Body() data) {
-    return this.sceneService.updateScene(data);
-  }
+  @Post("update")
+  async update(@Body() data) { return this.sceneService.update(data); }
 
   @UseGuards(JwtAuthGuard)
-  @Post("createScene")
-  async createScene(@Body() data) {
-    const scene = this.sceneService.createScene(data);
-    return scene;
-  }
+  @Post("create")
+  async create(@Body() data) { return this.sceneService.create(data); }
 
   @UseGuards(JwtAuthGuard)
-  @Post("deleteScene")
-  async deleteScene(@Body() data) {
-    const scene = this.sceneService.deleteScene(data);
-    return scene;
-  }
+  @Post("delete")
+  async delete(@Body() data) { return this.sceneService.delete(data); }
 
 }

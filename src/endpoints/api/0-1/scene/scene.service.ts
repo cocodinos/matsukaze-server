@@ -2,79 +2,62 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Scene } from 'src/models/scene.model';
 import { Beat } from 'src/models/beat.model';
-import { ActService } from '../act/act.service';
+import { DataService } from 'src/services/data/data.service';
 
 @Injectable()
 export class SceneService {
 
   attributes: any = ['id', 'actId', 'position', 'title', 'summary', 'notes'];
   order: any = [['position', 'ASC']];
+  include: any = [{model: Beat, attributes: ['id']}];
+  updateFields: any = ['actId', 'position', 'title', 'summary', 'notes'];
 
   constructor(
-    @InjectModel(Scene)private sceneModel: typeof Scene,
+    @InjectModel(Scene)private model: typeof Scene,
+    private dataService: DataService
   ) {}
 
-  async getActScenes(actId: string): Promise<any> {
-    var story = await this.findAllActScenes({actId: actId});
-    return story;
+  async create(params: any): Promise<Scene> {
+    var maxPosition = await this.dataService.getMaxPosition({model: this.model, where: {actId: params?.actId}})
+    params.position = maxPosition+1;
+    return await this.dataService.create({
+      model: this.model,
+      values: params
+    })
   }
 
-  async createScene(params: any): Promise<Scene> {
-    var scene = null;
-    if(params?.actId) {
-      var maxPosition = await this.getMaxPosition({actId: params?.actId})
-      if(maxPosition) {
-        params.position = maxPosition+1;
-        scene = await this.sceneModel.create(params);
-      }
-    }
-    return scene;
+  async get(params: any): Promise<Scene> {
+    return await this.dataService.findOne({
+      model: this.model,
+      where: params,
+      include: this.include,
+      attributes: this.attributes
+    })
   }
 
-  async deleteScene(params: any): Promise<Scene> {
-    var scene = await this.findOne(params);
-    scene?.destroy();
-    return scene;
+  async gets(params: any): Promise<Scene[]> {
+    return await this.dataService.findAll({
+      model: this.model,
+      where: params,
+      order: this.order,
+      include: this.include,
+      attributes: this.attributes
+    })
   }
 
-  async findOne(params: any): Promise<any> {
-    try {
-      return this.sceneModel.findOne({
-        where: params,
-        include: [{model: Beat, attributes: ['id']}],
-        order: this.order,
-        attributes: this.attributes,
-      });
-    } catch {
-      return null;
-    }
+  async update(params: any): Promise<Scene> {
+    return await this.dataService.update({
+      model: this.model,
+      where: {id: params.id},
+      params: params,
+      fields: this.updateFields
+    });
   }
 
-  async findAllActScenes(params: any): Promise<any> {
-    try {
-      return this.sceneModel.findAll({
-        where: params,
-        include: [{model: Beat, attributes: ['id']}],
-        order: this.order,
-        attributes: this.attributes,
-      });
-    } catch {
-      return null;
-    }
+  async delete(params: any): Promise<Scene> {
+    return await this.dataService.delete({
+      model: this.model,
+      where: params
+    });
   }
-
-  async updateScene(params: any): Promise<Scene> {
-    try {
-      var scene = await this.findOne({id: params?.id})
-      if(scene) { scene.update(params, {fields: ['actId', 'position', 'title', 'summary', 'notes']}); }
-      return scene;
-    } catch {
-      return null;
-    }
-  }
-
-  async getMaxPosition(params: any): Promise<number> {
-    return this.sceneModel.max('position', {where: params});
-  }
-
 }

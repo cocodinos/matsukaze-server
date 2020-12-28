@@ -1,4 +1,4 @@
-import { Controller, Request, Get, UseGuards, Query } from '@nestjs/common';
+import { Controller, Request, Get, UseGuards, Query, Body, Post } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
 import { StoryService } from './story.service';
 
@@ -11,10 +11,24 @@ export class StoryController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get("")
-  async get(@Query() query) {
-    const story = this.storyService.getStory(query?.id);
-    return story;
-  }
+  @Get("get")
+  async get(@Query() query) { return this.storyService.get({id: query?.id}); }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("gets")
+  async gets(@Query() query) { return this.storyService.gets({projectId: query?.projectId}); }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("update")
+  async update(@Body() data) { return this.storyService.update(data); }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("create")
+  async create(@Body() data) { return this.storyService.create(data); }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("delete")
+  async delete(@Body() data) { return this.storyService.delete(data); }
+
 
 }
