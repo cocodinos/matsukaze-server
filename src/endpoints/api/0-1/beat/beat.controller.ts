@@ -1,13 +1,13 @@
 import { Controller, Request, Get, UseGuards, Query, Post, Body } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
-import { ActService } from './act.service';
+import { BeatService } from './beat.service';
 
 
-@Controller('api/0.1/act')
-export class ActController {
+@Controller('api/0.1/scene')
+export class BeatController {
 
   constructor(
-    private readonly service: ActService
+    private readonly service: BeatService
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -16,7 +16,7 @@ export class ActController {
 
   @UseGuards(JwtAuthGuard)
   @Get("gets")
-  async gets(@Query() query) { return this.service.gets({storyId: query?.storyId}); }
+  async gets(@Query() query) { return this.service.gets({sceneId: query?.sceneId}); }
 
   @UseGuards(JwtAuthGuard)
   @Post("update")
@@ -29,4 +29,5 @@ export class ActController {
   @UseGuards(JwtAuthGuard)
   @Post("delete")
   async delete(@Body() data) { return this.service.delete(data); }
+
 }

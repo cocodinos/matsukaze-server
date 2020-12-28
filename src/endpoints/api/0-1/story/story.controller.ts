@@ -7,28 +7,27 @@ import { StoryService } from './story.service';
 export class StoryController {
 
   constructor(
-    private readonly storyService: StoryService,
+    private readonly service: StoryService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get("get")
-  async get(@Query() query) { return this.storyService.get({id: query?.id}); }
+  async get(@Query() query) { return this.service.get({id: query?.id}); }
 
   @UseGuards(JwtAuthGuard)
   @Get("gets")
-  async gets(@Query() query) { return this.storyService.gets({projectId: query?.projectId}); }
+  async gets(@Query() query) { return this.service.gets({projectId: query?.projectId}); }
 
   @UseGuards(JwtAuthGuard)
   @Post("update")
-  async update(@Body() data) { return this.storyService.update(data); }
+  async update(@Body() data) { return this.service.update(data); }
 
   @UseGuards(JwtAuthGuard)
   @Post("create")
-  async create(@Body() data) { return this.storyService.create(data); }
+  async create(@Body() data) { return this.service.create(data); }
 
   @UseGuards(JwtAuthGuard)
   @Post("delete")
-  async delete(@Body() data) { return this.storyService.delete(data); }
-
+  async delete(@Body() data) { return this.service.delete(data); }
 
 }

@@ -1,20 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Act } from 'src/models/act.model';
-import { Scene } from 'src/models/scene.model';
+import { Beat } from 'src/models/beat.model';
 import { DataService } from 'src/services/data/data.service';
 
 @Injectable()
-export class ActService {
+export class BeatService {
 
-  attributes: any = ['id', 'storyId', 'title', 'position', 'summary', 'notes'];
+  attributes: any = ['id', 'actId', 'position', 'title', 'summary', 'notes'];
   order: any = [['position', 'ASC']];
-  include: any = [{model: Scene, attributes: ['id']}];
-  updateFields: any = ['storyId', 'title', 'position', 'summary', 'notes'];
-  parentKey: string = "storyId"
+  include: any = [{model: Beat, attributes: ['id']}];
+  updateFields: any = ['actId', 'position', 'title', 'summary', 'notes'];
+  parentKey: string = "sceneId"
 
   constructor(
-    @InjectModel(Act)private model: typeof Act,
+    @InjectModel(Beat)private model: typeof Beat,
     private dataService: DataService
   ) {}
 

@@ -11,14 +11,15 @@ export class StoryService {
   order: any = [['position', 'ASC']];
   include: any = [{model: Act, attributes: ['id']}];
   updateFields: any = ['projectId', 'position', 'title'];
+  parentKey: string = "projectId"
 
   constructor(
     @InjectModel(Story)private model: typeof Story,
     private dataService: DataService
   ) {}
 
-  async create(params: any): Promise<Story> {
-    var maxPosition = await this.dataService.getMaxPosition({model: this.model, where: {projectId: params?.projectId}})
+  async create(params: any): Promise<any> {
+    var maxPosition = await this.dataService.getMaxPosition({model: this.model, where: {[this.parentKey]: params[this.parentKey]}})
     params.position = maxPosition+1;
     return await this.dataService.create({
       model: this.model,
@@ -26,7 +27,7 @@ export class StoryService {
     })
   }
 
-  async get(params: any): Promise<Story> {
+  async get(params: any): Promise<any> {
     return await this.dataService.findOne({
       model: this.model,
       where: params,
@@ -35,7 +36,7 @@ export class StoryService {
     })
   }
 
-  async gets(params: any): Promise<Story[]> {
+  async gets(params: any): Promise<any[]> {
     return await this.dataService.findAll({
       model: this.model,
       where: params,
@@ -45,7 +46,7 @@ export class StoryService {
     })
   }
 
-  async update(params: any): Promise<Story> {
+  async update(params: any): Promise<any> {
     return await this.dataService.update({
       model: this.model,
       where: {id: params.id},
@@ -54,7 +55,7 @@ export class StoryService {
     });
   }
 
-  async delete(params: any): Promise<Story> {
+  async delete(params: any): Promise<any> {
     return await this.dataService.delete({
       model: this.model,
       where: params

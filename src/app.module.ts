@@ -28,6 +28,7 @@ import { I18nBundle } from './models/i18n.bundle.model';
 import { I18nBundleText } from './models/i18n.bundle.text.model';
 import { PublicationPage } from './models/publication.page.model';
 import { SceneModule } from './endpoints/api/0-1/scene/scene.module';
+import { BeatModule } from './endpoints/api/0-1/beat/beat.module';
 
 
 @Module({
@@ -37,6 +38,7 @@ import { SceneModule } from './endpoints/api/0-1/scene/scene.module';
     StoryModule,
     ActModule,
     SceneModule,
+    BeatModule,
     SequelizeModule.forRoot({
       dialect: 'mariadb',
       host: 'test.aethon.sg',

@@ -11,14 +11,15 @@ export class SceneService {
   order: any = [['position', 'ASC']];
   include: any = [{model: Beat, attributes: ['id']}];
   updateFields: any = ['actId', 'position', 'title', 'summary', 'notes'];
+  parentKey: string = "actId"
 
   constructor(
     @InjectModel(Scene)private model: typeof Scene,
     private dataService: DataService
   ) {}
 
-  async create(params: any): Promise<Scene> {
-    var maxPosition = await this.dataService.getMaxPosition({model: this.model, where: {actId: params?.actId}})
+  async create(params: any): Promise<any> {
+    var maxPosition = await this.dataService.getMaxPosition({model: this.model, where: {[this.parentKey]: params[this.parentKey]}})
     params.position = maxPosition+1;
     return await this.dataService.create({
       model: this.model,
@@ -26,7 +27,7 @@ export class SceneService {
     })
   }
 
-  async get(params: any): Promise<Scene> {
+  async get(params: any): Promise<any> {
     return await this.dataService.findOne({
       model: this.model,
       where: params,
@@ -35,7 +36,7 @@ export class SceneService {
     })
   }
 
-  async gets(params: any): Promise<Scene[]> {
+  async gets(params: any): Promise<any[]> {
     return await this.dataService.findAll({
       model: this.model,
       where: params,
@@ -45,7 +46,7 @@ export class SceneService {
     })
   }
 
-  async update(params: any): Promise<Scene> {
+  async update(params: any): Promise<any> {
     return await this.dataService.update({
       model: this.model,
       where: {id: params.id},
@@ -54,7 +55,7 @@ export class SceneService {
     });
   }
 
-  async delete(params: any): Promise<Scene> {
+  async delete(params: any): Promise<any> {
     return await this.dataService.delete({
       model: this.model,
       where: params
