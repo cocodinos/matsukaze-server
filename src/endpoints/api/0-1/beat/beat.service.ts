@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Beat } from 'src/models/beat.model';
+import { DialogueLine } from 'src/models/dialogue.line.model';
 import { DataService } from 'src/services/data/data.service';
 
 @Injectable()
 export class BeatService {
 
-  attributes: any = ['id', 'actId', 'position', 'title', 'summary', 'notes'];
+  attributes: any = ['id', 'sceneId', 'position', 'action', 'notes'];
   order: any = [['position', 'ASC']];
-  include: any = [{model: Beat, attributes: ['id']}];
+  include: any = [{model: DialogueLine, attributes: ['id']}];
   updateFields: any = ['actId', 'position', 'title', 'summary', 'notes'];
   parentKey: string = "sceneId"
 
@@ -19,6 +20,7 @@ export class BeatService {
 
   async create(params: any): Promise<any> {
     var maxPosition = await this.dataService.getMaxPosition({model: this.model, where: {[this.parentKey]: params[this.parentKey]}})
+    if(!maxPosition) maxPosition = 0;
     params.position = maxPosition+1;
     return await this.dataService.create({
       model: this.model,
@@ -30,7 +32,6 @@ export class BeatService {
     return await this.dataService.findOne({
       model: this.model,
       where: params,
-      include: this.include,
       attributes: this.attributes
     })
   }
@@ -40,7 +41,6 @@ export class BeatService {
       model: this.model,
       where: params,
       order: this.order,
-      include: this.include,
       attributes: this.attributes
     })
   }

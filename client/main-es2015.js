@@ -288,7 +288,7 @@ AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCompo
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StoryEditorComponent", function() { return StoryEditorComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/app/services/editor/editor.service */ "ovZ/");
+/* harmony import */ var src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/app/services/editor/model.service */ "ovZ/");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "ofXK");
 
 
@@ -300,16 +300,16 @@ function StoryEditorComponent_div_4_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } }
 class StoryEditorComponent {
-    constructor(editorService) {
-        this.editorService = editorService;
+    constructor(storyService) {
+        this.storyService = storyService;
     }
     ngOnInit() {
     }
     get() {
-        return this.editorService.getStory$(1);
+        return this.storyService.getStory$(1);
     }
 }
-StoryEditorComponent.ɵfac = function StoryEditorComponent_Factory(t) { return new (t || StoryEditorComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__["EditorService"])); };
+StoryEditorComponent.ɵfac = function StoryEditorComponent_Factory(t) { return new (t || StoryEditorComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__["StoryService"])); };
 StoryEditorComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: StoryEditorComponent, selectors: [["matsukaze-story-editor"]], decls: 6, vars: 3, consts: [[1, "top"], [1, "workspace"], [4, "ngIf"]], template: function StoryEditorComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
@@ -331,7 +331,7 @@ StoryEditorComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdef
                 templateUrl: './story-editor.component.html',
                 styleUrls: ['./story-editor.component.scss']
             }]
-    }], function () { return [{ type: src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__["EditorService"] }]; }, null); })();
+    }], function () { return [{ type: src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__["StoryService"] }]; }, null); })();
 
 
 /***/ }),
@@ -509,7 +509,7 @@ class AppModule {
 AppModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineNgModule"]({ type: AppModule, bootstrap: [_components_app_app_component__WEBPACK_IMPORTED_MODULE_10__["AppComponent"]] });
 AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineInjector"]({ factory: function AppModule_Factory(t) { return new (t || AppModule)(); }, providers: [
         _services_api_api_service__WEBPACK_IMPORTED_MODULE_14__["ApiService"],
-        _services_editor_editor_service__WEBPACK_IMPORTED_MODULE_15__["EditorService"]
+        _services_editor_editor_service__WEBPACK_IMPORTED_MODULE_15__["StoryService"]
     ], imports: [[
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
             _routing_app_routing_module__WEBPACK_IMPORTED_MODULE_2__["AppRoutingModule"],
@@ -555,7 +555,7 @@ AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineInjector
                 ],
                 providers: [
                     _services_api_api_service__WEBPACK_IMPORTED_MODULE_14__["ApiService"],
-                    _services_editor_editor_service__WEBPACK_IMPORTED_MODULE_15__["EditorService"]
+                    _services_editor_editor_service__WEBPACK_IMPORTED_MODULE_15__["StoryService"]
                 ],
                 bootstrap: [_components_app_app_component__WEBPACK_IMPORTED_MODULE_10__["AppComponent"]]
             }]
@@ -688,14 +688,14 @@ ApiService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInject
 
 /***/ "ovZ/":
 /*!***************************************************!*\
-  !*** ./src/app/services/editor/editor.service.ts ***!
+  !*** ./src/app/services/editor/model.service.ts ***!
   \***************************************************/
-/*! exports provided: EditorService */
+/*! exports provided: StoryService */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EditorService", function() { return EditorService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StoryService", function() { return StoryService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var _api_spec_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api.spec.json */ "1RlG");
 var _api_spec_json__WEBPACK_IMPORTED_MODULE_1___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../api.spec.json */ "1RlG", 1);
@@ -704,7 +704,7 @@ var _api_spec_json__WEBPACK_IMPORTED_MODULE_1___namespace = /*#__PURE__*/__webpa
 
 
 
-class EditorService {
+class StoryService {
     constructor(apiService) {
         this.apiService = apiService;
     }
@@ -715,9 +715,9 @@ class EditorService {
         return this.apiService.request$(_api_spec_json__WEBPACK_IMPORTED_MODULE_1__["actions"].story.getStory, { id: id });
     }
 }
-EditorService.ɵfac = function EditorService_Factory(t) { return new (t || EditorService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_api_api_service_js__WEBPACK_IMPORTED_MODULE_2__["ApiService"])); };
-EditorService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: EditorService, factory: EditorService.ɵfac, providedIn: 'root' });
-/*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](EditorService, [{
+StoryService.ɵfac = function StoryService_Factory(t) { return new (t || StoryService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_api_api_service_js__WEBPACK_IMPORTED_MODULE_2__["ApiService"])); };
+StoryService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: StoryService, factory: StoryService.ɵfac, providedIn: 'root' });
+/*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](StoryService, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"],
         args: [{
                 providedIn: 'root'

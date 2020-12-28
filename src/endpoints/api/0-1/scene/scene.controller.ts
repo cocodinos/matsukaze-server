@@ -11,20 +11,20 @@ export class SceneController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @Post("create")
+  async create(@Body() data) { return this.service.create(data); }
+
+  @UseGuards(JwtAuthGuard)
   @Get("get")
   async get(@Query() query) { return this.service.get({id: query?.id}); }
 
   @UseGuards(JwtAuthGuard)
   @Get("gets")
-  async gets(@Query() query) { return this.service.gets({actId: query?.actId}); }
+  async gets(@Query() query) { return this.service.gets({actId: query?.parentId}); }
 
   @UseGuards(JwtAuthGuard)
   @Post("update")
   async update(@Body() data) { return this.service.update(data); }
-
-  @UseGuards(JwtAuthGuard)
-  @Post("create")
-  async create(@Body() data) { return this.service.create(data); }
 
   @UseGuards(JwtAuthGuard)
   @Post("delete")

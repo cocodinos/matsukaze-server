@@ -11,20 +11,20 @@ export class ActController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @Post("create")
+  async create(@Body() data) { console.log(data); return this.service.create(data); }
+
+  @UseGuards(JwtAuthGuard)
   @Get("get")
   async get(@Query() query) { return this.service.get({id: query?.id}); }
 
   @UseGuards(JwtAuthGuard)
   @Get("gets")
-  async gets(@Query() query) { return this.service.gets({storyId: query?.storyId}); }
+  async gets(@Query() query) { return this.service.gets({storyId: query?.parentId}); }
 
   @UseGuards(JwtAuthGuard)
   @Post("update")
   async update(@Body() data) { return this.service.update(data); }
-
-  @UseGuards(JwtAuthGuard)
-  @Post("create")
-  async create(@Body() data) { return this.service.create(data); }
 
   @UseGuards(JwtAuthGuard)
   @Post("delete")

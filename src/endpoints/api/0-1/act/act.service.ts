@@ -20,6 +20,7 @@ export class ActService {
 
   async create(params: any): Promise<any> {
     var maxPosition = await this.dataService.getMaxPosition({model: this.model, where: {[this.parentKey]: params[this.parentKey]}})
+    if(!maxPosition) maxPosition = 0;
     params.position = maxPosition+1;
     return await this.dataService.create({
       model: this.model,
@@ -31,7 +32,6 @@ export class ActService {
     return await this.dataService.findOne({
       model: this.model,
       where: params,
-      include: this.include,
       attributes: this.attributes
     })
   }
@@ -41,7 +41,6 @@ export class ActService {
       model: this.model,
       where: params,
       order: this.order,
-      include: this.include,
       attributes: this.attributes
     })
   }

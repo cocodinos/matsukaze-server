@@ -598,7 +598,7 @@
 
 
       var src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-      /*! src/app/services/editor/editor.service */
+      /*! src/app/services/editor/model.service */
       "ovZ/");
       /* harmony import */
 
@@ -618,10 +618,10 @@
       }
 
       var StoryEditorComponent = /*#__PURE__*/function () {
-        function StoryEditorComponent(editorService) {
+        function StoryEditorComponent(storyService) {
           _classCallCheck(this, StoryEditorComponent);
 
-          this.editorService = editorService;
+          this.storyService = storyService;
         }
 
         _createClass(StoryEditorComponent, [{
@@ -630,7 +630,7 @@
         }, {
           key: "get",
           value: function get() {
-            return this.editorService.getStory$(1);
+            return this.storyService.getStory$(1);
           }
         }]);
 
@@ -638,7 +638,7 @@
       }();
 
       StoryEditorComponent.ɵfac = function StoryEditorComponent_Factory(t) {
-        return new (t || StoryEditorComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__["EditorService"]));
+        return new (t || StoryEditorComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__["StoryService"]));
       };
 
       StoryEditorComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
@@ -690,7 +690,7 @@
           }]
         }], function () {
           return [{
-            type: src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__["EditorService"]
+            type: src_app_services_editor_editor_service__WEBPACK_IMPORTED_MODULE_1__["StoryService"]
           }];
         }, null);
       })();
@@ -1028,7 +1028,7 @@
         factory: function AppModule_Factory(t) {
           return new (t || AppModule)();
         },
-        providers: [_services_api_api_service__WEBPACK_IMPORTED_MODULE_14__["ApiService"], _services_editor_editor_service__WEBPACK_IMPORTED_MODULE_15__["EditorService"]],
+        providers: [_services_api_api_service__WEBPACK_IMPORTED_MODULE_14__["ApiService"], _services_editor_editor_service__WEBPACK_IMPORTED_MODULE_15__["StoryService"]],
         imports: [[_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _routing_app_routing_module__WEBPACK_IMPORTED_MODULE_2__["AppRoutingModule"], _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_4__["BrowserAnimationsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormsModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FontAwesomeModule"], ngx_drag_drop__WEBPACK_IMPORTED_MODULE_7__["DndModule"], _ng_select_ng_select__WEBPACK_IMPORTED_MODULE_8__["NgSelectModule"], ngx_autosize__WEBPACK_IMPORTED_MODULE_6__["AutosizeModule"]]]
       });
 
@@ -1047,7 +1047,7 @@
           args: [{
             declarations: [_components_app_app_component__WEBPACK_IMPORTED_MODULE_10__["AppComponent"], _components_auth_auth_component__WEBPACK_IMPORTED_MODULE_11__["AuthComponent"], _components_editor_editor_home_editor_home_component__WEBPACK_IMPORTED_MODULE_12__["EditorHomeComponent"], _components_editor_story_editor_story_editor_component__WEBPACK_IMPORTED_MODULE_13__["StoryEditorComponent"]],
             imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _routing_app_routing_module__WEBPACK_IMPORTED_MODULE_2__["AppRoutingModule"], _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_4__["BrowserAnimationsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormsModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FontAwesomeModule"], ngx_drag_drop__WEBPACK_IMPORTED_MODULE_7__["DndModule"], _ng_select_ng_select__WEBPACK_IMPORTED_MODULE_8__["NgSelectModule"], ngx_autosize__WEBPACK_IMPORTED_MODULE_6__["AutosizeModule"]],
-            providers: [_services_api_api_service__WEBPACK_IMPORTED_MODULE_14__["ApiService"], _services_editor_editor_service__WEBPACK_IMPORTED_MODULE_15__["EditorService"]],
+            providers: [_services_api_api_service__WEBPACK_IMPORTED_MODULE_14__["ApiService"], _services_editor_editor_service__WEBPACK_IMPORTED_MODULE_15__["StoryService"]],
             bootstrap: [_components_app_app_component__WEBPACK_IMPORTED_MODULE_10__["AppComponent"]]
           }]
         }], null, null);
@@ -1257,10 +1257,10 @@
     /***/
     "ovZ/":
     /*!***************************************************!*\
-      !*** ./src/app/services/editor/editor.service.ts ***!
+      !*** ./src/app/services/editor/model.service.ts ***!
       \***************************************************/
 
-    /*! exports provided: EditorService */
+    /*! exports provided: StoryService */
 
     /***/
     function ovZ(module, __webpack_exports__, __webpack_require__) {
@@ -1270,8 +1270,8 @@
       /* harmony export (binding) */
 
 
-      __webpack_require__.d(__webpack_exports__, "EditorService", function () {
-        return EditorService;
+      __webpack_require__.d(__webpack_exports__, "StoryService", function () {
+        return StoryService;
       });
       /* harmony import */
 
@@ -1296,14 +1296,14 @@
       /*! ../api/api.service.js */
       "YTy9");
 
-      var EditorService = /*#__PURE__*/function () {
-        function EditorService(apiService) {
-          _classCallCheck(this, EditorService);
+      var StoryService = /*#__PURE__*/function () {
+        function StoryService(apiService) {
+          _classCallCheck(this, StoryService);
 
           this.apiService = apiService;
         }
 
-        _createClass(EditorService, [{
+        _createClass(StoryService, [{
           key: "getProject$",
           value: function getProject$() {
             return null;
@@ -1317,22 +1317,22 @@
           }
         }]);
 
-        return EditorService;
+        return StoryService;
       }();
 
-      EditorService.ɵfac = function EditorService_Factory(t) {
-        return new (t || EditorService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_api_api_service_js__WEBPACK_IMPORTED_MODULE_2__["ApiService"]));
+      StoryService.ɵfac = function StoryService_Factory(t) {
+        return new (t || StoryService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_api_api_service_js__WEBPACK_IMPORTED_MODULE_2__["ApiService"]));
       };
 
-      EditorService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
-        token: EditorService,
-        factory: EditorService.ɵfac,
+      StoryService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
+        token: StoryService,
+        factory: StoryService.ɵfac,
         providedIn: 'root'
       });
       /*@__PURE__*/
 
       (function () {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](EditorService, [{
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](StoryService, [{
           type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"],
           args: [{
             providedIn: 'root'
