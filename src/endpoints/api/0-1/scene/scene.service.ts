@@ -41,12 +41,7 @@ export class SceneService {
     try {
       return this.sceneModel.findOne({
         where: params,
-        include: [
-          {
-            model: Beat,
-            attributes: ['id']
-          },
-        ],
+        include: [{model: Beat, attributes: ['id']}],
         order: this.order,
         attributes: this.attributes,
       });
@@ -59,12 +54,7 @@ export class SceneService {
     try {
       return this.sceneModel.findAll({
         where: params,
-        include: [
-          {
-            model: Beat,
-            attributes: ['id']
-          },
-        ],
+        include: [{model: Beat, attributes: ['id']}],
         order: this.order,
         attributes: this.attributes,
       });
@@ -76,9 +66,7 @@ export class SceneService {
   async updateScene(params: any): Promise<Scene> {
     try {
       var scene = await this.findOne({id: params?.id})
-      if(scene) {
-        scene.update(params, {fields: ['actId', 'position', 'title', 'summary', 'notes']});
-      }
+      if(scene) { scene.update(params, {fields: ['actId', 'position', 'title', 'summary', 'notes']}); }
       return scene;
     } catch {
       return null;

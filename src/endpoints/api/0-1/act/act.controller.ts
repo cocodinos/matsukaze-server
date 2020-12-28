@@ -11,40 +11,22 @@ export class ActController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get("getAct")
-  async getAct(@Query() query) {
-    const act = this.actService.findOne({id: query?.id});
-    return act;
-  }
+  @Get("get")
+  async getAct(@Query() query) { return this.actService.get({id: query?.id}); }
 
   @UseGuards(JwtAuthGuard)
-  @Get("getActs")
-  async getActs(@Query() query) {
-    const acts = this.actService.getStoryActs(query?.storyId);
-    return acts;
-  }
+  @Get("gets")
+  async getActs(@Query() query) { return this.actService.gets({storyId: query?.storyId}); }
 
   @UseGuards(JwtAuthGuard)
-  @Post("updateAct")
-  async updateAct(@Body() data) {
-    const scene = this.actService.updateAct(data);
-    return scene;
-  }
+  @Post("update")
+  async updateAct(@Body() data) { return this.actService.update(data); }
 
   @UseGuards(JwtAuthGuard)
-  @Post("createAct")
-  async createScene(@Body() data) {
-    const act = this.actService.createAct(data);
-    return act;
-  }
+  @Post("create")
+  async createAct(@Body() data) { return this.actService.create(data); }
 
   @UseGuards(JwtAuthGuard)
-  @Post("deleteAct")
-  async deleteAct(@Body() data) {
-    console.log(data);
-    const act = this.actService.deleteAct(data);
-    return act;
-  }
-
-
+  @Post("delete")
+  async deleteAct(@Body() data) { return this.actService.delete(data); }
 }

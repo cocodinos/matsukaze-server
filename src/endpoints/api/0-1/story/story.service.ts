@@ -19,12 +19,7 @@ export class StoryService {
     try {
       return this.storyModel.findOne({
         where: params,
-        include: [
-          {
-            model: Act,
-            attributes: ['id']
-          },
-        ],
+        include: [{model: Act, attributes: ['id']}],
         order: [['position', 'ASC']],
         attributes: ['id', 'title', 'position'],
       }).then(data => {return data.toJSON()});
@@ -37,12 +32,7 @@ export class StoryService {
     try {
       return this.storyModel.findAll({
         where: params,
-        include: [
-          {
-            model: Act,
-            attributes: ['id']
-          },
-        ],
+        include: [{model: Act, attributes: ['id']}],
         order: [['position', 'ASC']],
         attributes: ['id', 'title', 'position'],
       });

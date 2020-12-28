@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Act } from 'src/models/act.model';
+import { DataService } from 'src/services/data/data.service';
 import { ActController } from './act.controller';
 import { ActService } from './act.service';
 
@@ -9,7 +10,7 @@ import { ActService } from './act.service';
   imports: [
     SequelizeModule.forFeature([Act]),
   ],
-  providers: [ActService],
+  providers: [ActService, DataService],
   controllers: [ActController],
   exports: [ActService]
 })

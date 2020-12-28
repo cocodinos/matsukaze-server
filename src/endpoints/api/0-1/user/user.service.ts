@@ -16,13 +16,7 @@ export class UserService {
     const user = await this.userModel.findOne({
       attributes: ['id', 'email', 'hash'],
       where: {email},
-      include: [{
-        model: Role,
-        attributes: ['id', 'name'],
-        through: {
-          attributes: []
-        }
-      }]
+      include: [{model: Role, attributes: ['id', 'name'], through: {attributes: []}}]
     });
     return user;
   }
