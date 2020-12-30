@@ -55,9 +55,23 @@ export class ActService {
   }
 
   async delete(params: any): Promise<any> {
+    var act = await this.get(params);
     return await this.dataService.delete({
       model: this.model,
       where: params
-    });
+    }).then( data => {
+      if(data) {
+        this.dataService.updatePositions({
+          model: this.model,
+          where: {
+            [this.parentKey]: act.storyId
+          }
+        });
+        return true
+      }
+      else {
+        return false;
+      }
+    })
   }
 }

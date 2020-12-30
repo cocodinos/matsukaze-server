@@ -55,9 +55,23 @@ export class StoryService {
   }
 
   async delete(params: any): Promise<any> {
+    var story = await this.get(params);
     return await this.dataService.delete({
       model: this.model,
       where: params
-    });
+    }).then( data => {
+      if(data) {
+        this.dataService.updatePositions({
+          model: this.model,
+          where: {
+            [this.parentKey]: story.projectId
+          }
+        });
+        return true
+      }
+      else {
+        return false;
+      }
+    })
   }
 }

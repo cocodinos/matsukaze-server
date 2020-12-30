@@ -55,9 +55,23 @@ export class BeatService {
   }
 
   async delete(params: any): Promise<any> {
+    var beat = await this.get(params);
     return await this.dataService.delete({
       model: this.model,
       where: params
-    });
+    }).then( data => {
+      if(data) {
+        this.dataService.updatePositions({
+          model: this.model,
+          where: {
+            [this.parentKey]: beat.sceneId
+          }
+        });
+        return true
+      }
+      else {
+        return false;
+      }
+    })
   }
 }

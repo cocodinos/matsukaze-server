@@ -9,7 +9,7 @@ export class DataService {
     try {
       return params.model.create(params.values);
     } catch {
-      this.errorHandler()
+      return this.errorHandler()
     }
   }
 
@@ -21,7 +21,7 @@ export class DataService {
         {fields: params.fields}
       )
     } catch {
-      this.errorHandler()
+      return this.errorHandler()
     }
   }
 
@@ -34,11 +34,11 @@ export class DataService {
         attributes: params.attributes,
       });
     } catch {
-      this.errorHandler()
+      return this.errorHandler()
     }
   }
 
-  findAll(params: any): Promise<any> {
+  async findAll(params: any): Promise<any> {
     try {
       return params.model.findAll({
         where: params.where,
@@ -51,11 +51,22 @@ export class DataService {
     }
   }
 
-  delete(params: any): Promise<any> {
+  async delete(params: any): Promise<any> {
     try {
       return params.model.destroy({where: params.where});
     } catch {
-      this.errorHandler()
+      return this.errorHandler()
+    }
+  }
+
+  async updatePositions(params: any): Promise<any> {
+    try {
+      return this.findAll(params).then(records => {
+        for(var positionCounter in records) { records[positionCounter].update({position: Number(positionCounter) + 1}); }
+        return records;
+      });
+    } catch {
+      return this.errorHandler()
     }
   }
 
@@ -63,20 +74,7 @@ export class DataService {
     return params.model.max('position', {where: params.where});
   }
 
-  stub(params: any): Promise<any> {
-    try {
-      return params.model.findOne({
-        where: params.where,
-        include: params.include,
-        order: params.order,
-        attributes: params.attributes,
-      });
-    } catch {
-      this.errorHandler()
-    }
-  }
-
-  private errorHandler() {
+  async errorHandler($error?: any): Promise<any> {
     throw new HttpException('Query error', HttpStatus.NOT_ACCEPTABLE);
   }
 
