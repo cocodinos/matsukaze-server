@@ -16,6 +16,4 @@ export class Page extends Model<Page> {
   @BelongsToMany(()=> Publication, () => PublicationPage)
   pages: Page[];
 
-  @HasMany(() => Beat)
-  beats: Beat[];
 }

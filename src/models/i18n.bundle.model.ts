@@ -1,9 +1,9 @@
 import { Table, Model, HasMany } from 'sequelize-typescript';
-import { I18nBundleText } from './i18n.bundle.text.model';
+import { I18nBundleElement } from './i18n.bundle.element.model';
 
 @Table
 export class I18nBundle extends Model<I18nBundle> {
 
-  @HasMany(()=> I18nBundleText, "i18nBundleId")
-  i18n: I18nBundleText;
+  @HasMany(()=> I18nBundleElement, "i18nBundleId")
+  i18nBundleElements: I18nBundleElement[];
 }

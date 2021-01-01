@@ -14,7 +14,7 @@ export enum MatsukazeObjectTypes {
   beat = "Beat",
   dialogueLine = "DialogueLine",
   publication = "Publication",
-  I18nBundleText = "I18nText",
+  I18nBundleElement = "I18nBundleElement",
   I18nBundle = "I18nBundle",
   language = "Language",
   role = "Role",
@@ -113,7 +113,7 @@ export class I18nBundle extends MatsukazeObject {
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.I18nBundle; }
 }
 
-export class I18nBundleText extends MatsukazeObject {
+export class I18nBundleElement extends MatsukazeObject {
   id: string;
   language: Language;
   text: string;
@@ -122,7 +122,7 @@ export class I18nBundleText extends MatsukazeObject {
 
   toJson(): any { return super.toJson(); }
 
-  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.I18nBundleText; }
+  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.I18nBundleElement; }
 
 }
 
@@ -140,19 +140,21 @@ export class Publication extends MatsukazeObject {
 
 // STORY STRUCTURE ELEMENTS ----------------------------------------------------
 
-export interface StructureElement extends Positioned {
+export interface StoryStructureElement extends Positioned {
+  projectId: string;
   parentId: string;
-  children$: Observable<StructureElement[]>;
-  children: StructureElement[];
+  children$: Observable<StoryStructureElement[]>;
+  children: StoryStructureElement[];
 }
 
-export class Story extends MatsukazeObject implements StructureElement {
+export class Story extends MatsukazeObject implements StoryStructureElement {
+  projectId: string;
   id: string;
   position: number;
   type: MatsukazeObjectTypes.story;
   parentId: string;
-  children$: Observable<StructureElement[]>;
-  children: StructureElement[];
+  children$: Observable<StoryStructureElement[]>;
+  children: StoryStructureElement[];
 
   title: string;
   summary: string;
@@ -166,13 +168,14 @@ export class Story extends MatsukazeObject implements StructureElement {
 
 }
 
-export class Act extends MatsukazeObject implements StructureElement {
+export class Act extends MatsukazeObject implements StoryStructureElement {
+  projectId: string;
   id: string;
   position: number;
   type: MatsukazeObjectTypes.act;
   parentId: string;
-  children$: Observable<StructureElement[]>;
-  children: StructureElement[];
+  children$: Observable<StoryStructureElement[]>;
+  children: StoryStructureElement[];
 
   title: string;
   summary: string;
@@ -186,13 +189,14 @@ export class Act extends MatsukazeObject implements StructureElement {
 
 }
 
-export class Scene extends MatsukazeObject implements StructureElement {
+export class Scene extends MatsukazeObject implements StoryStructureElement {
+  projectId: string;
   id: string;
   position: number;
   type: MatsukazeObjectTypes.scene;
   parentId: string;
-  children$: Observable<StructureElement[]>;
-  children: StructureElement[];
+  children$: Observable<StoryStructureElement[]>;
+  children: StoryStructureElement[];
 
   title: string;
   summary: string;
@@ -206,13 +210,14 @@ export class Scene extends MatsukazeObject implements StructureElement {
 
 }
 
-export class Beat extends MatsukazeObject implements StructureElement {
+export class Beat extends MatsukazeObject implements StoryStructureElement {
+  projectId: string;
   id: string;
   position: number;
   type: MatsukazeObjectTypes.beat;
   parentId: string;
-  children$: Observable<StructureElement[]>;
-  children: StructureElement[];
+  children$: Observable<StoryStructureElement[]>;
+  children: StoryStructureElement[];
 
   summary: string;
   action: string;
@@ -224,15 +229,16 @@ export class Beat extends MatsukazeObject implements StructureElement {
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.beat; }
 }
 
-export class DialogueLine extends MatsukazeObject implements StructureElement {
+export class DialogueLine extends MatsukazeObject implements StoryStructureElement {
+  projectId: string;
   id: string;
   position: number;
   type: MatsukazeObjectTypes.dialogueLine;
   parentId: string;
-  children$: Observable<StructureElement[]>;
-  children: StructureElement[];
+  children$: Observable<StoryStructureElement[]>;
+  children: StoryStructureElement[];
 
-  text: I18nBundle;
+  i18nBundle: I18nBundle;
 
   constructor(params: any) { super(params); }
 

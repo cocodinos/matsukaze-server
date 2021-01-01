@@ -1,14 +1,8 @@
-import { Table, Column, Model, AllowNull, BelongsTo, HasMany } from 'sequelize-typescript';
-import { DataType } from 'sequelize-typescript';
-import { Act } from './act.model';
-import { Beat } from './beat.model';
+import { Table, Column, Model, BelongsTo, DataType } from 'sequelize-typescript';
+import { StoryStructureElement } from './story-structure-element.model';
 
 @Table
 export class Scene extends Model<Scene> {
-
-  @AllowNull(false)
-  @Column
-  position: number;
 
   @Column
   title: string;
@@ -19,9 +13,7 @@ export class Scene extends Model<Scene> {
   @Column(DataType.TEXT)
   notes: string;
 
-  @BelongsTo(() => Act, "actiId")
-  act: Act;
+  @BelongsTo(() => StoryStructureElement, "storyStructureElementId")
+  storyStructureElement: StoryStructureElement;
 
-  @HasMany(()=> Beat, "beatId")
-  beats: Beat[];
 }

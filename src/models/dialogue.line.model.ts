@@ -1,13 +1,9 @@
-import { Table, Column, Model, AllowNull, BelongsTo } from 'sequelize-typescript';
-import { Beat } from './beat.model';
+import { Table, Column, Model, BelongsTo, DataType } from 'sequelize-typescript';
+import { StoryStructureElement } from './story-structure-element.model';
 import { I18nBundle } from './i18n.bundle.model';
 
 @Table
 export class DialogueLine extends Model<DialogueLine> {
-
-  @AllowNull(false)
-  @Column
-  position: number;
 
   @Column
   source: string;
@@ -15,9 +11,10 @@ export class DialogueLine extends Model<DialogueLine> {
   @Column
   type: string;
 
-  @BelongsTo(() => Beat, "beatId")
-  beat: Beat;
+  @BelongsTo(() => StoryStructureElement, "storyStructureElementId")
+  storyStructureElement: StoryStructureElement;
 
   @BelongsTo(() => I18nBundle, "i18nBundleId")
-  text: I18nBundle;
+  i18nBundle: I18nBundle;
+
 }

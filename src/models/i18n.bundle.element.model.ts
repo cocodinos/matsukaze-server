@@ -3,7 +3,7 @@ import { Language } from './language.model';
 import { I18nBundle } from './i18n.bundle.model';
 
 @Table
-export class I18nBundleText extends Model<I18nBundleText> {
+export class I18nBundleElement extends Model<I18nBundleElement> {
 
   @BelongsTo(() => I18nBundle, "i18nBundleId")
   I18nBundle: I18nBundle;

@@ -1,15 +1,8 @@
-import { Table, Column, Model, AllowNull, BelongsTo, ForeignKey, HasMany, HasOne } from 'sequelize-typescript';
-import { DataType } from 'sequelize-typescript';
-import { Scene } from './scene.model';
-import { Page } from './page.model';
-import { DialogueLine } from './dialogue.line.model';
+import { Table, Column, Model, BelongsTo, DataType } from 'sequelize-typescript';
+import { StoryStructureElement } from './story-structure-element.model';
 
 @Table
 export class Beat extends Model<Beat> {
-
-  @AllowNull(false)
-  @Column
-  position: number;
 
   @Column(DataType.TEXT)
   action: string;
@@ -17,17 +10,7 @@ export class Beat extends Model<Beat> {
   @Column(DataType.TEXT)
   notes: string;
 
-  @BelongsTo(() => Scene, "sceneId")
-  scene: Scene;
-
-  @ForeignKey(() => Page)
-  @Column
-  pageId: number;
-
-  @BelongsTo(() => Page)
-  page: Page;
-
-  @HasMany(() => DialogueLine, "beatId")
-  dialogueLines: DialogueLine[];
+  @BelongsTo(() => StoryStructureElement, "storyStructureElementId")
+  storyStructureElement: StoryStructureElement;
 
 }

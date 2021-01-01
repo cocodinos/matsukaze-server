@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
-
+import { User } from 'src/models/user.model';
 
 @Injectable()
 export class DataService {
@@ -15,14 +15,22 @@ export class DataService {
     }
   }
 
+  async findUser(email: string): Promise<any> {
+    try {
+      return User.findOne({where: {email: email}});
+    } catch {
+
+    }
+  }
+
   async findOne(params: any): Promise<any> {
     try {
       return params.model.findOne({
         where: params.where,
-        include: params.include,
-        order: params.order,
-        attributes: params.attributes,
-      });
+        include: params?.include,
+        order: params?.order,
+        attributes: params?.attributes
+      })
     } catch {
       return this.errorHandler()
     }

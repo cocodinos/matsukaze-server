@@ -1,7 +1,5 @@
-import { Table, Column, Model, AllowNull, BelongsTo, ForeignKey, HasMany } from 'sequelize-typescript';
-import { Story } from './story.model';
-import { DataType } from 'sequelize-typescript';
-import { Scene } from './scene.model';
+import { Table, Column, Model, BelongsTo, DataType } from 'sequelize-typescript';
+import { StoryStructureElement } from './story-structure-element.model';
 
 @Table
 export class Act extends Model<Act> {
@@ -9,19 +7,13 @@ export class Act extends Model<Act> {
   @Column
   title: string;
 
-  @AllowNull(false)
-  @Column
-  position: number;
-
   @Column(DataType.TEXT)
   summary: string;
 
   @Column(DataType.TEXT)
   notes: string;
 
-  @BelongsTo(() => Story, "storyId")
-  story: Story;
+  @BelongsTo(() => StoryStructureElement, "storyStructureElementId")
+  storyStructureElement: StoryStructureElement;
 
-  @HasMany(() => Scene, "actId")
-  scenes: Scene[];
 }
