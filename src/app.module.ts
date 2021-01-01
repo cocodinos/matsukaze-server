@@ -3,12 +3,15 @@ import * as path from 'path';
 import { I18nModule, I18nJsonParser, QueryResolver, HeaderResolver, AcceptLanguageResolver, CookieResolver } from 'nestjs-i18n';
 import { SequelizeModule } from '@nestjs/sequelize';
 
+// Enpoint models
 import { RootController } from './endpoints/root/root.controller';
 import { DataService } from './services/data/data.service';
-import { UserModule } from './endpoints/api/0-1/user/user.module';
-import { AuthModule } from './endpoints/api/0-1/auth/auth.module';
-import { StoryModule } from './endpoints/api/0-1/story/story.module';
-import { ActModule } from './endpoints/api/0-1/act/act.module';
+import { UserModule } from './endpoints/api/0-1/modules/user/user.module';
+import { AuthModule } from './endpoints/api/0-1/modules/auth/auth.module';
+import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
+import { ActModule } from './endpoints/api/0-1/modules/act/act.module';
+import { SceneModule } from './endpoints/api/0-1/modules/scene/scene.module';
+import { BeatModule } from './endpoints/api/0-1/modules/beat/beat.module';
 
 // Sequelize data models
 import { User } from './models/user.model';
@@ -27,8 +30,7 @@ import { DialogueLine } from './models/dialogue.line.model';
 import { I18nBundle } from './models/i18n.bundle.model';
 import { I18nBundleText } from './models/i18n.bundle.text.model';
 import { PublicationPage } from './models/publication.page.model';
-import { SceneModule } from './endpoints/api/0-1/scene/scene.module';
-import { BeatModule } from './endpoints/api/0-1/beat/beat.module';
+
 
 
 @Module({
