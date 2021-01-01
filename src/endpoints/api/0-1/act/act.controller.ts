@@ -27,6 +27,10 @@ export class ActController {
   async update(@Body() data) { return this.service.update(data); }
 
   @UseGuards(JwtAuthGuard)
+  @Post("move")
+  async move(@Body() data) { return this.service.move(data); }
+
+  @UseGuards(JwtAuthGuard)
   @Post("delete")
   async delete(@Body() data) { return this.service.delete(data); }
 }

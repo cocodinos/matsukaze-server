@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
+
 
 @Injectable()
 export class DataService {
@@ -8,18 +10,6 @@ export class DataService {
   create(params: any): Promise<any> {
     try {
       return params.model.create(params.values);
-    } catch {
-      return this.errorHandler()
-    }
-  }
-
-  update(params: any): Promise<any> {
-    try {
-      return params.model.update(
-        params.params,
-        {where: params.where},
-        {fields: params.fields}
-      )
     } catch {
       return this.errorHandler()
     }
@@ -51,9 +41,56 @@ export class DataService {
     }
   }
 
-  async delete(params: any): Promise<any> {
+  update(params: any): Promise<any> {
     try {
-      return params.model.destroy({where: params.where});
+      return params.model.update(
+        params.params,
+        {where: params.where},
+        {fields: params.fields}
+      )
+    } catch {
+      return this.errorHandler()
+    }
+  }
+
+  async move(params: any): Promise<any> {
+    try {
+      if(params.fromParentId!=params.toParentId) {
+        // move element imported from another parent to end of list
+        params.fromPosition = await this.getMaxPosition({model: params.model, where: {[params.parentKey]: params.toParentId}})+1;
+        await this.update({
+          model: params.model,
+          where: {
+            id: params.id
+          },
+          params: {
+            position: params.fromPosition,
+            [params.parentKey]: params.toParentId
+          }
+        })
+      }
+      const iterFrom: number = (params.fromPosition <= params.toPosition)?params.fromPosition:params.toPosition;
+      const iterTo: number = (iterFrom === params.fromPosition)?params.toPosition:params.fromPosition;
+      const positionChange: number = (params.fromPosition <= params.toPosition)?-1:1;
+      return await this.findAll({
+        model: params.model,
+        where: {
+          [params.parentKey]: params.toParentId,
+          [Op.and] : [
+            {position: {[Op.gte]: iterFrom}},
+            {position: {[Op.lte]: iterTo}}
+          ]
+        }
+      }).then(elements => {
+        for(var element of elements) {
+          var sql:any = {};
+          if(element.id==params.id) {
+            element.update({position: params.toPosition});
+          } else {
+            element.update({position: element.position + positionChange});
+          }
+        }
+      })
     } catch {
       return this.errorHandler()
     }
@@ -70,11 +107,21 @@ export class DataService {
     }
   }
 
+  async delete(params: any): Promise<any> {
+    try {
+      return params.model.destroy({where: params.where});
+    } catch {
+      return this.errorHandler()
+    }
+  }
+
   async getMaxPosition(params: any): Promise<number> {
     return params.model.max('position', {where: params.where});
   }
 
+
   async errorHandler($error?: any): Promise<any> {
+    console.log($error);
     throw new HttpException('Query error', HttpStatus.NOT_ACCEPTABLE);
   }
 

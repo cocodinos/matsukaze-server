@@ -54,6 +54,18 @@ export class ActService {
     });
   }
 
+  async move(params: any): Promise<any> {
+    return await this.dataService.move({
+      model: this.model,
+      parentKey: this.parentKey,
+      id: params.id,
+      fromParentId: params.fromParentId,
+      toParentId: params.toParentId,
+      fromPosition: params.fromPosition,
+      toPosition: params.toPosition
+    });
+  }
+
   async delete(params: any): Promise<any> {
     var act = await this.get(params);
     return await this.dataService.delete({
