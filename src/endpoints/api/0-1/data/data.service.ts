@@ -45,7 +45,7 @@ export class DataService {
         attributes: params.attributes,
       });
     } catch {
-      this.errorHandler()
+      return this.errorHandler()
     }
   }
 

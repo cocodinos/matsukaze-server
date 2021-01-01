@@ -19,13 +19,13 @@ export class ActController {
   @UseGuards(JwtAuthGuard)
   @Get("get")
   async get(@Query() query) {
-    return this.storyStructureElementService.get({id: query?.id});
+    return this.storyStructureElementService.get(query);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get("gets")
   async gets(@Query() query) {
-    return this.storyStructureElementService.gets({parentId: query?.parentId});
+    return this.storyStructureElementService.gets(query);
   }
 
   // @UseGuards(JwtAuthGuard)

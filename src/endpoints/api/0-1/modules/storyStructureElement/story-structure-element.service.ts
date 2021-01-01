@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { Model } from 'sequelize-typescript';
 import { Act } from 'src/models/act.model';
 import { Beat } from 'src/models/beat.model';
@@ -67,22 +68,20 @@ export class StoryStructureElementService {
 
   async get(data: any): Promise<any> {
     try {
+      console.log(data);
       return this.dataService.findOne({
         model: this.storyStructureElementModel,
         attributes: ['id', 'type', 'projectId', 'position', 'parentId'],
         include: [
-          {model: this.ORMConfig.Story.model, attributes: this.ORMConfig.Story.attributes},
-          {model: this.ORMConfig.Act.model, attributes: this.ORMConfig.Act.attributes},
-          {model: this.ORMConfig.Scene.model, attributes: this.ORMConfig.Scene.attributes},
-          {model: this.ORMConfig.Beat.model, attributes: this.ORMConfig.Beat.attributes},
-          {model: this.ORMConfig.DialogueLine.model, attributes: this.ORMConfig.DialogueLine.attributes},
+          {model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}
         ],
-        where: {id: data.id}
+        where: {[Op.and]:{id: data.id, type: data.type}}
       }).then(result => {
         return this.DTOFactory(result);
       });
     } catch {
       // error handling tbd
+      return null;
     }
   }
 
@@ -92,20 +91,16 @@ export class StoryStructureElementService {
         model: this.storyStructureElementModel,
         attributes: ['id', 'type', 'projectId', 'position', 'parentId'],
         include: [
-          {model: this.ORMConfig.Story.model, attributes: this.ORMConfig.Story.attributes},
-          {model: this.ORMConfig.Act.model, attributes: this.ORMConfig.Act.attributes},
-          {model: this.ORMConfig.Scene.model, attributes: this.ORMConfig.Scene.attributes},
-          {model: this.ORMConfig.Beat.model, attributes: this.ORMConfig.Beat.attributes},
-          {model: this.ORMConfig.DialogueLine.model, attributes: this.ORMConfig.DialogueLine.attributes},
+          {model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}
         ],
-        where: {parentId: data.parentId}
+        where: {[Op.and]:{parentId: data.parentId, type: data.type}}
       }).then(results => {
         var outputJSONArray: any[] = []
         for(var result of results) { outputJSONArray.push(this.DTOFactory(result)); }
         return outputJSONArray;
       });
     } catch {
-      // error handling tbd
+      return null;
     }
   }
 
@@ -152,10 +147,13 @@ export class StoryStructureElementService {
   // }
 
   private DTOFactory(sequelizeModel: Model): any {
-    const tmp: any = sequelizeModel.toJSON()
-    const tmpTypeData: any = tmp[tmp.type.toLowerCase()]
-    var DTO = {id: tmp.id, projectId: tmp.projectId, type: tmp.type, position: tmp.position, parentId: tmp.parentId};
-    for(var key in tmpTypeData) { DTO[key] = tmpTypeData[key]; }
+    var DTO: any = {}
+    if(sequelizeModel) {
+      const tmp: any = sequelizeModel.toJSON()
+      const tmpTypeData: any = tmp[tmp.type.toLowerCase()]
+      DTO = {id: tmp.id, projectId: tmp.projectId, type: tmp.type, position: tmp.position, parentId: tmp.parentId};
+      for(var key in tmpTypeData) { DTO[key] = tmpTypeData[key]; }
+    }
     return DTO;
   }
 }
