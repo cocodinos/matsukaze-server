@@ -83,13 +83,13 @@ export class DataService {
         }
       }).then(elements => {
         for(var element of elements) {
-          var sql:any = {};
           if(element.id==params.id) {
             element.update({position: params.toPosition});
           } else {
             element.update({position: element.position + positionChange});
           }
         }
+        return true;
       })
     } catch {
       return this.errorHandler()
