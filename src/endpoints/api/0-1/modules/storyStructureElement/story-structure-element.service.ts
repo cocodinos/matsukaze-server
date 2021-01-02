@@ -15,26 +15,31 @@ export class StoryStructureElementService {
 
   ORMConfig:any = {
     Story: {
+      key: "story",
       model: this.storyModel,
       attributes: ['id', 'title', 'summary', 'notes'],
       updateFields: ['title', 'summary', 'notes'],
     },
     Act: {
+      key: "act",
       model: this.actModel,
       attributes: ['id', 'title', 'summary', 'notes'],
       updateFields: ['title', 'summary', 'notes'],
     },
     Scene: {
+      key: "scene",
       model: this.sceneModel,
       attributes: ['id', 'title', 'summary', 'notes'],
       updateFields: ['title', 'summary', 'notes'],
     },
     Beat: {
+      key: "beat",
       model: this.beatModel,
       attributes: ['id', 'action', 'notes'],
       updateFields: ['action', 'notes'],
     },
     DialogueLine: {
+      key: "dialogueLine",
       model: this.dialogueLineModel,
       attributes: ['id', 'source', 'type'],
       updateFields: ['source', 'type'],
@@ -51,20 +56,33 @@ export class StoryStructureElementService {
     private dataService: DataService
   ) {}
 
-  // async create(params: any): Promise<any> {
-  //   var maxPosition = await this.dataService.getMaxPosition({model: this.model, where: {[this.parentKey]: params[this.parentKey]}})
-  //   if(!maxPosition) maxPosition = 0;
-  //   params.position = maxPosition+1;
-  //   return await this.dataService.create({
-  //     model: this.model,
-  //     values: params
-  //   })
-  // }
+  async create(data: any): Promise<any> {
+    const targetModel = this.ORMConfig[data.type].model;
+
+    return this.storyStructureElementModel.max('position', {
+      where: {[Op.and]:{parentId: data.parentId, type: data.type}}
+    }).then(maxPosition => {
+      if(!maxPosition) maxPosition = 0;
+      const position = Number(maxPosition)+1;
+      return this.storyStructureElementModel.create({
+        position: position,
+        type: data.type,
+        projectId: data.projectId,
+        parentId: data.parentId,
+      })
+    }).then(result => {
+      data.storyStructureElementId = result.get("id");
+      delete data.id;
+      targetModel.create(data);
+      return result.reload()
+    }).then(result => {
+      return this.DTOFactory(result)
+    })
+  }
 
   async get(data: any): Promise<any> {
     try {
-      return this.dataService.findOne({
-        model: this.storyStructureElementModel,
+      return this.storyStructureElementModel.findOne({
         attributes: ['id', 'type', 'projectId', 'position', 'parentId'],
         include: [
           {model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}
@@ -81,8 +99,7 @@ export class StoryStructureElementService {
 
   async gets(data: any): Promise<any[]> {
     try {
-      return this.dataService.findAll({
-        model: this.storyStructureElementModel,
+      return this.storyStructureElementModel.findAll({
         attributes: ['id', 'type', 'projectId', 'position', 'parentId'],
         include: [
           {model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}
@@ -99,20 +116,20 @@ export class StoryStructureElementService {
   }
 
   async update(data: any): Promise<any> {
-    return this.dataService.findOne({
-      model: this.storyStructureElementModel,
+    return this.storyStructureElementModel.findOne({
       attributes: ['id', 'type', 'projectId', 'position', 'parentId'],
       include: [{model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}],
       where: {[Op.and]:{id: data.id, type: data.type}}
     }).then(storyStructureElement => {
       delete data.id;
-      const targetClassId = storyStructureElement.get(storyStructureElement.type.toLowerCase()).get("id");
-      return this.dataService.update({
-        model: this.ORMConfig[storyStructureElement.type].model,
-        where: {id: targetClassId},
-        params: data,
-        fields: this.ORMConfig[storyStructureElement.type].updateFields
-      });
+      const targetModel = this.ORMConfig[storyStructureElement.type].model;
+      const childElement: any = storyStructureElement.get(storyStructureElement.type.toLowerCase());
+      const targetClassId = childElement.get("id");
+      return targetModel.update(
+        data,
+        {where: {id: Number(targetClassId)}},
+        {fields: this.ORMConfig[storyStructureElement.type].updateFields}
+      );
     })
 
   }

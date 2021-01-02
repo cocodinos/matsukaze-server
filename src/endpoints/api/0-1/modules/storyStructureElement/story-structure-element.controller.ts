@@ -10,12 +10,12 @@ export class ActController {
     private readonly storyStructureElementService: StoryStructureElementService
   ) {}
 
-  // @UseGuards(JwtAuthGuard)
-  // @Post("create")
-  // async create(@Body() data) {
-  //   return this.storyStructureElementService.create(data);
-  // }
-  //
+  @UseGuards(JwtAuthGuard)
+  @Post("create")
+  async create(@Body() data) {
+    return this.storyStructureElementService.create(data);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get("get")
   async get(@Query() query) {
@@ -33,7 +33,7 @@ export class ActController {
   async update(@Body() data) {
     return this.storyStructureElementService.update(data);
   }
-  
+
   // @UseGuards(JwtAuthGuard)
   // @Post("move")
   // async move(@Body() data) {
