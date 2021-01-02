@@ -20,25 +20,53 @@ export class StoryStructureElement extends Model<StoryStructureElement> {
   @BelongsTo(() => Project, "projectId")
   project: Project;
 
-  @BelongsTo(() => StoryStructureElement, "parentId")
+  @BelongsTo(() => StoryStructureElement, {
+    foreignKey: "parentId",
+    onDelete: "CASCADE",
+    hooks: true
+  })
   parent: StoryStructureElement;
 
-  @HasMany(()=> StoryStructureElement, "parentId")
+  @HasMany(()=> StoryStructureElement, {
+    foreignKey: "parentId",
+    onDelete: "CASCADE",
+    hooks: true
+  })
   children: StoryStructureElement[];
 
-  @HasOne(() => Story, "storyStructureElementId")
+  @HasOne(() => Story, {
+    foreignKey:"storyStructureElementId",
+    onDelete: "CASCADE",
+    hooks: true
+  })
   story: Story;
 
-  @HasOne(() => Act, "storyStructureElementId")
+  @HasOne(() => Act, {
+    foreignKey:"storyStructureElementId",
+    onDelete: "CASCADE",
+    hooks: true
+  })
   act: Act;
 
-  @HasOne(() => Scene, "storyStructureElementId")
+  @HasOne(() => Scene, {
+    foreignKey:"storyStructureElementId",
+    onDelete: "CASCADE",
+    hooks: true
+  })
   scene: Scene;
 
-  @HasOne(() => Beat, "storyStructureElementId")
+  @HasOne(() => Beat, {
+    foreignKey:"storyStructureElementId",
+    onDelete: "CASCADE",
+    hooks: true
+  })
   beat: Beat;
 
-  @HasOne(() => DialogueLine, "storyStructureElementId")
+  @HasOne(() => DialogueLine, {
+    foreignKey:"storyStructureElementId",
+    onDelete: "CASCADE",
+    hooks: true
+  })
   dialogueLine: DialogueLine;
 
 }

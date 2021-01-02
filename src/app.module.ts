@@ -36,11 +36,11 @@ import { StoryStructureElement } from './models/story-structure-element.model';
     AuthModule,
     StoryStructureElementModule,
     SequelizeModule.forRoot({
-      dialect: 'mariadb',
-      host: 'test.aethon.sg',
+      dialect: 'mysql',
+      host: '127.0.0.1',
       port: 3306,
       username: 'root',
-      password: 'w3WqrDNYDjmH',
+      password: 'NuckyThompson123',
       database: 'matsukaze',
       models: [
         User,

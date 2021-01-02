@@ -34,15 +34,15 @@ export class ActController {
     return this.storyStructureElementService.update(data);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Post("move")
-  // async move(@Body() data) {
-  //   return this.storyStructureElementService.move(data);
-  // }
-  //
-  // @UseGuards(JwtAuthGuard)
-  // @Post("delete")
-  // async delete(@Body() data) {
-  //   return this.storyStructureElementService.delete(data);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Post("move")
+  async move(@Body() data) {
+    return this.storyStructureElementService.move(data);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("delete")
+  async delete(@Body() data) {
+    return this.storyStructureElementService.delete(data);
+  }
 }

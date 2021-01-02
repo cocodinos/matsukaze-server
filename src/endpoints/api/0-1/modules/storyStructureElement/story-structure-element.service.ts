@@ -8,7 +8,6 @@ import { DialogueLine } from 'src/models/dialogue.line.model';
 import { Scene } from 'src/models/scene.model';
 import { StoryStructureElement } from 'src/models/story-structure-element.model';
 import { Story } from 'src/models/story.model';
-import { DataService } from '../../data/data.service';
 
 @Injectable()
 export class StoryStructureElementService {
@@ -53,31 +52,32 @@ export class StoryStructureElementService {
     @InjectModel(Scene) private sceneModel: typeof Scene,
     @InjectModel(Beat) private beatModel: typeof Beat,
     @InjectModel(DialogueLine) private dialogueLineModel: typeof DialogueLine,
-    private dataService: DataService
   ) {}
 
   async create(data: any): Promise<any> {
-    const targetModel = this.ORMConfig[data.type].model;
-
-    return this.storyStructureElementModel.max('position', {
-      where: {[Op.and]:{parentId: data.parentId, type: data.type}}
-    }).then(maxPosition => {
-      if(!maxPosition) maxPosition = 0;
-      const position = Number(maxPosition)+1;
-      return this.storyStructureElementModel.create({
-        position: position,
-        type: data.type,
-        projectId: data.projectId,
-        parentId: data.parentId,
-      })
-    }).then(result => {
-      data.storyStructureElementId = result.get("id");
-      delete data.id;
-      targetModel.create(data);
-      return result.reload()
-    }).then(result => {
-      return this.DTOFactory(result)
-    })
+    try {
+      const targetModel = this.ORMConfig[data.type].model;
+      return this.storyStructureElementModel.max('position', {
+        where: {[Op.and]:{parentId: data.parentId, type: data.type}}
+      }).then(maxPosition => {
+        if(!maxPosition) maxPosition = 0;
+        const position = Number(maxPosition)+1;
+        return this.storyStructureElementModel.create({
+          position: position,
+          type: data.type,
+          projectId: data.projectId,
+          parentId: data.parentId,
+        })
+      }).then(result => {
+        data.storyStructureElementId = result.get("id");
+        delete data.id;
+        targetModel.create(data);
+        return result.reload()
+      }).then(result => {
+        return this.DTOFactory(result)
+    })} catch {
+      return null
+    }
   }
 
   async get(data: any): Promise<any> {
@@ -104,6 +104,7 @@ export class StoryStructureElementService {
         include: [
           {model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}
         ],
+        order: [['position', 'ASC']],
         where: {[Op.and]:{parentId: data.parentId, type: data.type}}
       }).then(results => {
         var outputJSONArray: any[] = []
@@ -131,41 +132,55 @@ export class StoryStructureElementService {
         {fields: this.ORMConfig[storyStructureElement.type].updateFields}
       );
     })
-
   }
-  //
-  // async move(params: any): Promise<any> {
-  //   return await this.dataService.move({
-  //     model: this.model,
-  //     parentKey: this.parentKey,
-  //     id: params.id,
-  //     fromParentId: params.fromParentId,
-  //     toParentId: params.toParentId,
-  //     fromPosition: params.fromPosition,
-  //     toPosition: params.toPosition
-  //   });
-  // }
-  //
-  // async delete(params: any): Promise<any> {
-  //   var act = await this.get(params);
-  //   return await this.dataService.delete({
-  //     model: this.model,
-  //     where: params
-  //   }).then( data => {
-  //     if(data) {
-  //       this.dataService.updatePositions({
-  //         model: this.model,
-  //         where: {
-  //           [this.parentKey]: act.storyId
-  //         }
-  //       });
-  //       return true
-  //     }
-  //     else {
-  //       return false;
-  //     }
-  //   })
-  // }
+
+  async move(data: any): Promise<any> {
+    try {
+      var positionChange, iterFrom, iterTo;
+      // first if element is imported from another parent, move
+      // it to end of new parent's list
+      if(data.fromParentId!=data.toParentId) {
+        await this.storyStructureElementModel.max('position', {
+          where: {[Op.and]:{
+            parentId: data.parentId,
+            type: data.type
+        }}}).then(maxPosition => {
+          data.fromPosition = Number(maxPosition) + 1;
+          return this.storyStructureElementModel.update(
+            {position: data.fromPosition, parentId: data.toParentId},
+            {where: { id: data.id }}
+          )
+        });
+      }
+      iterFrom = (data.fromPosition <= data.toPosition)?data.fromPosition:data.toPosition;
+      iterTo = (iterFrom === data.fromPosition)?data.toPosition:data.fromPosition;
+      positionChange = (data.fromPosition <= data.toPosition)?-1:1;
+      return this.storyStructureElementModel.findAll({
+        where: {
+          parentId: data.toParentId,
+          [Op.and] : [
+            {position: {[Op.gte]: iterFrom}},
+            {position: {[Op.lte]: iterTo}}
+          ]
+        }
+      }).then(elements => {
+        for(var element of elements) {
+          if(element.id==data.id) {
+            element.update({position: data.toPosition});
+          } else {
+            element.update({position: element.position + positionChange});
+          }
+        }
+        return true;
+      })
+    } catch {
+      return false
+    }
+  }
+
+  async delete(data: any): Promise<any> {
+    return this.storyStructureElementModel.destroy({where: data})
+  }
 
   private DTOFactory(sequelizeModel: Model): any {
     var DTO: any = {}

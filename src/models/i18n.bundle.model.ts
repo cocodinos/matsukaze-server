@@ -6,4 +6,5 @@ export class I18nBundle extends Model<I18nBundle> {
 
   @HasMany(()=> I18nBundleElement, "i18nBundleId")
   i18nBundleElements: I18nBundleElement[];
+
 }

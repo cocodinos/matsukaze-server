@@ -141,13 +141,18 @@ export class Publication extends MatsukazeObject {
 // STORY STRUCTURE ELEMENTS ----------------------------------------------------
 
 export interface StoryStructureElement extends Positioned {
+  id: string;
+  type: MatsukazeObjectTypes;
   projectId: string;
   parentId: string;
+}
+
+export interface StoryNode extends StoryStructureElement {
   children$: Observable<StoryStructureElement[]>;
   children: StoryStructureElement[];
 }
 
-export class Story extends MatsukazeObject implements StoryStructureElement {
+export class Story extends MatsukazeObject implements StoryNode {
   projectId: string;
   id: string;
   position: number;
@@ -168,7 +173,7 @@ export class Story extends MatsukazeObject implements StoryStructureElement {
 
 }
 
-export class Act extends MatsukazeObject implements StoryStructureElement {
+export class Act extends MatsukazeObject implements StoryNode {
   projectId: string;
   id: string;
   position: number;
@@ -189,7 +194,7 @@ export class Act extends MatsukazeObject implements StoryStructureElement {
 
 }
 
-export class Scene extends MatsukazeObject implements StoryStructureElement {
+export class Scene extends MatsukazeObject implements StoryNode {
   projectId: string;
   id: string;
   position: number;
@@ -210,7 +215,7 @@ export class Scene extends MatsukazeObject implements StoryStructureElement {
 
 }
 
-export class Beat extends MatsukazeObject implements StoryStructureElement {
+export class Beat extends MatsukazeObject implements StoryNode {
   projectId: string;
   id: string;
   position: number;
@@ -235,8 +240,6 @@ export class DialogueLine extends MatsukazeObject implements StoryStructureEleme
   position: number;
   type: MatsukazeObjectTypes.dialogueLine;
   parentId: string;
-  children$: Observable<StoryStructureElement[]>;
-  children: StoryStructureElement[];
 
   i18nBundle: I18nBundle;
 
