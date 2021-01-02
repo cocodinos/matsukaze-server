@@ -28,12 +28,12 @@ export class ActController {
     return this.storyStructureElementService.gets(query);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Post("update")
-  // async update(@Body() data) {
-  //   return this.storyStructureElementService.update(data);
-  // }
-  //
+  @UseGuards(JwtAuthGuard)
+  @Post("update")
+  async update(@Body() data) {
+    return this.storyStructureElementService.update(data);
+  }
+  
   // @UseGuards(JwtAuthGuard)
   // @Post("move")
   // async move(@Body() data) {
