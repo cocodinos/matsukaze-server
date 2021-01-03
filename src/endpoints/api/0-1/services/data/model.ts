@@ -36,7 +36,7 @@ export enum LetteringTypes {
 // MatsukazeObject DEFINITION---------------------------------------------------------------
 
 export class MatsukazeObject {
-  id: string = null;
+  id: number = null;
   type: MatsukazeObjectTypes;
 
   constructor(params: any) {
@@ -51,12 +51,13 @@ export class MatsukazeObject {
 // BASE CLASSES ----------------------------------------------------------------
 
 export interface Positioned {
-  id: string;
+  id: number;
   position: number;
+  type: MatsukazeObjectTypes;
 }
 
 export class Project extends MatsukazeObject {
-  id: string;
+  id: number;
   title: string;
   team: Array<string>;
   stories: Story[];
@@ -71,7 +72,7 @@ export class Project extends MatsukazeObject {
 }
 
 export class User extends MatsukazeObject {
-  id: string;
+  id: number;
   email: string;
   roles: Role[];
 
@@ -83,7 +84,7 @@ export class User extends MatsukazeObject {
 }
 
 export class Role extends MatsukazeObject {
-  id: string;
+  id: number;
   name: string;
 
   constructor(params: any) { super(params); }
@@ -94,7 +95,7 @@ export class Role extends MatsukazeObject {
 }
 
 export class Language extends MatsukazeObject {
-  id: string;
+  id: number;
   locale: string;
   name: string;
 
@@ -106,7 +107,7 @@ export class Language extends MatsukazeObject {
 }
 
 export class I18nBundle extends MatsukazeObject {
-  id: string;
+  id: number;
 
   toJson(): any { return super.toJson(); }
 
@@ -114,7 +115,7 @@ export class I18nBundle extends MatsukazeObject {
 }
 
 export class I18nBundleElement extends MatsukazeObject {
-  id: string;
+  id: number;
   language: Language;
   text: string;
 
@@ -127,7 +128,7 @@ export class I18nBundleElement extends MatsukazeObject {
 }
 
 export class Publication extends MatsukazeObject {
-  id: string;
+  id: number;
   title: I18nBundle;
   projectId: number
   pages: Page[] = [];
@@ -141,7 +142,7 @@ export class Publication extends MatsukazeObject {
 // STORY STRUCTURE ELEMENTS ----------------------------------------------------
 
 export interface StoryStructureElement extends Positioned {
-  id: string;
+  id: number;
   type: MatsukazeObjectTypes;
   projectId: string;
   parentId: string;
@@ -154,7 +155,7 @@ export interface StoryNode extends StoryStructureElement {
 
 export class Story extends MatsukazeObject implements StoryNode {
   projectId: string;
-  id: string;
+  id: number;
   position: number;
   type: MatsukazeObjectTypes.story;
   parentId: string;
@@ -175,7 +176,7 @@ export class Story extends MatsukazeObject implements StoryNode {
 
 export class Act extends MatsukazeObject implements StoryNode {
   projectId: string;
-  id: string;
+  id: number;
   position: number;
   type: MatsukazeObjectTypes.act;
   parentId: string;
@@ -196,7 +197,7 @@ export class Act extends MatsukazeObject implements StoryNode {
 
 export class Scene extends MatsukazeObject implements StoryNode {
   projectId: string;
-  id: string;
+  id: number;
   position: number;
   type: MatsukazeObjectTypes.scene;
   parentId: string;
@@ -217,7 +218,7 @@ export class Scene extends MatsukazeObject implements StoryNode {
 
 export class Beat extends MatsukazeObject implements StoryNode {
   projectId: string;
-  id: string;
+  id: number;
   position: number;
   type: MatsukazeObjectTypes.beat;
   parentId: string;
@@ -236,7 +237,7 @@ export class Beat extends MatsukazeObject implements StoryNode {
 
 export class DialogueLine extends MatsukazeObject implements StoryStructureElement {
   projectId: string;
-  id: string;
+  id: number;
   position: number;
   type: MatsukazeObjectTypes.dialogueLine;
   parentId: string;
@@ -253,7 +254,7 @@ export class DialogueLine extends MatsukazeObject implements StoryStructureEleme
 // PUBLICATION ELEMENTS ----------------------------------------------------
 
 export class Page extends MatsukazeObject implements Positioned {
-  id: string;
+  id: number;
   position: number;
   type: MatsukazeObjectTypes.dialogueLine;
 

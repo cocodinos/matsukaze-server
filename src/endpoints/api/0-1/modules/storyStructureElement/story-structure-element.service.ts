@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
+import { Model, Op } from 'sequelize';
 import { Act } from 'src/models/act.model';
 import { Beat } from 'src/models/beat.model';
 import { DialogueLine } from 'src/models/dialogue.line.model';
@@ -142,15 +142,20 @@ export class StoryStructureElementService {
       // it to end of new parent's list
       if(data.fromParentId!=data.toParentId) {
         await this.storyStructureElementModel.max('position', {
-          where: {[Op.and]:{
-            parentId: data.parentId,
-            type: data.type
-        }}}).then(maxPosition => {
+          where: {
+            [Op.and]: {
+              parentId: data.toParentId,
+              type: data.type
+            }
+          }
+        }).then(maxPosition => {
           data.fromPosition = Number(maxPosition) + 1;
           return this.storyStructureElementModel.update(
             {position: data.fromPosition, parentId: data.toParentId},
             {where: { id: data.id }}
-          )
+          ).then(result => {
+            if(result) return this.updatePositionsAfterDelete(data.fromParentId);
+          })
         });
       }
       iterFrom = (data.fromPosition <= data.toPosition)?data.fromPosition:data.toPosition;
@@ -180,7 +185,28 @@ export class StoryStructureElementService {
   }
 
   async delete(data: any): Promise<any> {
-    return this.storyStructureElementModel.destroy({where: data})
+    try {
+      return await this.storyStructureElementModel.destroy({where: data}).then(result => {
+        return this.updatePositionsAfterDelete(data.parentId);
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  private async updatePositionsAfterDelete(parentId: number) {
+    return this.storyStructureElementModel.findAll({
+      attributes: ['id', 'position', 'parentId'],
+      order: [['position', 'ASC']],
+      where: {[Op.and]:{parentId: parentId}}
+    }).then(results => {
+      for(let i=0; i<results.length; i++) {
+        <Model>results[i].set("position", i+1);
+        results[i].save()
+      }
+      return true;
+    })
   }
 
   async errorHandler($error?: any): Promise<any> {
