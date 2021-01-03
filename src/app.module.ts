@@ -9,7 +9,7 @@ import { RootController } from './endpoints/root/root.controller';
 import { UserModule } from './endpoints/api/0-1/modules/user/user.module';
 import { AuthModule } from './endpoints/api/0-1/modules/auth/auth.module';
 import { StoryStructureElementModule } from './endpoints/api/0-1/modules/storyStructureElement/story-structure-element.module';
-import { DataService } from './endpoints/api/0-1/data/data.service';
+import { DTOService } from './endpoints/api/0-1/services/data/dto.service';
 
 // Sequelize data models
 import { User } from './models/user.model';
@@ -80,6 +80,6 @@ import { StoryStructureElement } from './models/story-structure-element.model';
     AuthModule,
   ],
   controllers: [RootController],
-  providers: [DataService],
+  providers: [DTOService],
 })
 export class AppModule {}

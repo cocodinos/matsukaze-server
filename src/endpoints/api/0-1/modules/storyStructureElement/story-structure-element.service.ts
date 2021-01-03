@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
-import { Model } from 'sequelize-typescript';
 import { Act } from 'src/models/act.model';
 import { Beat } from 'src/models/beat.model';
 import { DialogueLine } from 'src/models/dialogue.line.model';
 import { Scene } from 'src/models/scene.model';
 import { StoryStructureElement } from 'src/models/story-structure-element.model';
 import { Story } from 'src/models/story.model';
+import { DTOService } from 'src/endpoints/api/0-1/services/data/dto.service'
 
 @Injectable()
 export class StoryStructureElementService {
@@ -52,6 +52,7 @@ export class StoryStructureElementService {
     @InjectModel(Scene) private sceneModel: typeof Scene,
     @InjectModel(Beat) private beatModel: typeof Beat,
     @InjectModel(DialogueLine) private dialogueLineModel: typeof DialogueLine,
+    private dtoService: DTOService
   ) {}
 
   async create(data: any): Promise<any> {
@@ -74,7 +75,7 @@ export class StoryStructureElementService {
         targetModel.create(data);
         return result.reload()
       }).then(result => {
-        return this.DTOFactory(result)
+        return this.dtoService.generateDTO(result)
     })} catch {
       return null
     }
@@ -89,7 +90,7 @@ export class StoryStructureElementService {
         ],
         where: {[Op.and]:{id: data.id, type: data.type}}
       }).then(result => {
-        return this.DTOFactory(result);
+        return this.dtoService.generateDTO(result);
       });
     } catch {
       // error handling tbd
@@ -108,7 +109,7 @@ export class StoryStructureElementService {
         where: {[Op.and]:{parentId: data.parentId, type: data.type}}
       }).then(results => {
         var outputJSONArray: any[] = []
-        for(var result of results) { outputJSONArray.push(this.DTOFactory(result)); }
+        for(var result of results) { outputJSONArray.push(this.dtoService.generateDTO(result)); }
         return outputJSONArray;
       });
     } catch {
@@ -182,14 +183,8 @@ export class StoryStructureElementService {
     return this.storyStructureElementModel.destroy({where: data})
   }
 
-  private DTOFactory(sequelizeModel: Model): any {
-    var DTO: any = {}
-    if(sequelizeModel) {
-      const tmp: any = sequelizeModel.toJSON()
-      const tmpTypeData: any = tmp[tmp.type.toLowerCase()]
-      DTO = {id: tmp.id, projectId: tmp.projectId, type: tmp.type, position: tmp.position, parentId: tmp.parentId};
-      for(var key in tmpTypeData) { if(key!="id") DTO[key] = tmpTypeData[key]; }
-    }
-    return DTO;
+  async errorHandler($error?: any): Promise<any> {
+    console.log($error);
+    throw new HttpException('Query error', HttpStatus.NOT_ACCEPTABLE);
   }
 }

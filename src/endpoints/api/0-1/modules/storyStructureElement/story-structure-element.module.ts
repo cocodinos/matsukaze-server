@@ -6,7 +6,7 @@ import { DialogueLine } from 'src/models/dialogue.line.model';
 import { Scene } from 'src/models/scene.model';
 import { StoryStructureElement } from 'src/models/story-structure-element.model';
 import { Story } from 'src/models/story.model';
-import { DataService } from '../../data/data.service';
+import { DTOService } from '../../services/data/dto.service';
 import { ActController } from './story-structure-element.controller';
 import { StoryStructureElementService } from './story-structure-element.service';
 
@@ -20,7 +20,7 @@ import { StoryStructureElementService } from './story-structure-element.service'
     SequelizeModule.forFeature([Beat]),
     SequelizeModule.forFeature([DialogueLine]),
   ],
-  providers: [StoryStructureElementService, DataService],
+  providers: [StoryStructureElementService, DTOService],
   controllers: [ActController],
   exports: [StoryStructureElementService]
 })
