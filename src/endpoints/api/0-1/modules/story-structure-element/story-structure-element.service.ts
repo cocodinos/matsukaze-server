@@ -40,7 +40,7 @@ export class StoryStructureElementService {
     DialogueLine: {
       key: "dialogueLine",
       model: this.dialogueLineModel,
-      attributes: ['id', 'source', 'type'],
+      attributes: ['id', 'source', 'type', "i18nBundleId"],
       updateFields: ['source', 'type'],
     }
   }
@@ -57,15 +57,15 @@ export class StoryStructureElementService {
 
   async create(data: any): Promise<any> {
     try {
-      const targetModel = this.ORMConfig[data.type].model;
+      const targetModel = this.ORMConfig[data.matsukazeObjectType].model;
       return this.storyStructureElementModel.max('position', {
-        where: {[Op.and]:{parentId: data.parentId, type: data.type}}
+        where: {[Op.and]:{parentId: data.parentId, matsukazeObjectType: data.matsukazeObjectType}}
       }).then(maxPosition => {
         if(!maxPosition) maxPosition = 0;
         const position = Number(maxPosition)+1;
         return this.storyStructureElementModel.create({
           position: position,
-          type: data.type,
+          matsukazeObjectType: data.matsukazeObjectType,
           projectId: data.projectId,
           parentId: data.parentId,
         })
@@ -84,11 +84,11 @@ export class StoryStructureElementService {
   async get(data: any): Promise<any> {
     try {
       return this.storyStructureElementModel.findOne({
-        attributes: ['id', 'type', 'projectId', 'position', 'parentId'],
+        attributes: ['id', 'matsukazeObjectType', 'projectId', 'position', 'parentId'],
         include: [
-          {model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}
+          {model: this.ORMConfig[data.matsukazeObjectType].model, attributes: this.ORMConfig[data.matsukazeObjectType].attributes}
         ],
-        where: {[Op.and]:{id: data.id, type: data.type}}
+        where: {[Op.and]:{id: data.id, matsukazeObjectType: data.matsukazeObjectType}}
       }).then(result => {
         return this.dtoService.generateDTO(result);
       });
@@ -101,12 +101,12 @@ export class StoryStructureElementService {
   async gets(data: any): Promise<any[]> {
     try {
       return this.storyStructureElementModel.findAll({
-        attributes: ['id', 'type', 'projectId', 'position', 'parentId'],
+        attributes: ['id', 'matsukazeObjectType', 'projectId', 'position', 'parentId'],
         include: [
-          {model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}
+          {model: this.ORMConfig[data.matsukazeObjectType].model, attributes: this.ORMConfig[data.matsukazeObjectType].attributes}
         ],
         order: [['position', 'ASC']],
-        where: {[Op.and]:{parentId: data.parentId, type: data.type}}
+        where: {[Op.and]:{parentId: data.parentId, matsukazeObjectType: data.matsukazeObjectType}}
       }).then(results => {
         var outputJSONArray: any[] = []
         for(var result of results) { outputJSONArray.push(this.dtoService.generateDTO(result)); }
@@ -119,18 +119,18 @@ export class StoryStructureElementService {
 
   async update(data: any): Promise<any> {
     return this.storyStructureElementModel.findOne({
-      attributes: ['id', 'type', 'projectId', 'position', 'parentId'],
-      include: [{model: this.ORMConfig[data.type].model, attributes: this.ORMConfig[data.type].attributes}],
-      where: {[Op.and]:{id: data.id, type: data.type}}
+      attributes: ['id', 'matsukazeObjectType', 'projectId', 'position', 'parentId'],
+      include: [{model: this.ORMConfig[data.matsukazeObjectType].model, attributes: this.ORMConfig[data.matsukazeObjectType].attributes}],
+      where: {[Op.and]:{id: data.id, matsukazeObjectType: data.matsukazeObjectType}}
     }).then(storyStructureElement => {
       delete data.id;
-      const targetModel = this.ORMConfig[storyStructureElement.type].model;
-      const childElement: any = storyStructureElement.get(storyStructureElement.type.toLowerCase());
+      const targetModel = this.ORMConfig[storyStructureElement.matsukazeObjectType].model;
+      const childElement: any = storyStructureElement.get(storyStructureElement.matsukazeObjectType.toLowerCase());
       const targetClassId = childElement.get("id");
       return targetModel.update(
         data,
         {where: {id: Number(targetClassId)}},
-        {fields: this.ORMConfig[storyStructureElement.type].updateFields}
+        {fields: this.ORMConfig[storyStructureElement.matsukazeObjectType].updateFields}
       );
     })
   }
@@ -145,7 +145,7 @@ export class StoryStructureElementService {
           where: {
             [Op.and]: {
               parentId: data.toParentId,
-              type: data.type
+              matsukazeObjectType: data.matsukazeObjectType
             }
           }
         }).then(maxPosition => {

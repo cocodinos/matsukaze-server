@@ -7,7 +7,7 @@ export class DTOService {
 
   generateDTO(data: any, type?: MatsukazeObjectTypes): MatsukazeObject {
     var dto: any = {}
-    var dtoType: MatsukazeObjectTypes = (type)? type : data["type"]
+    var dtoType: MatsukazeObjectTypes = (type)? type : data["matsukazeObjectType"]
 
     if(data && dtoType) {
       if(dtoType == MatsukazeObjectTypes.story ||
@@ -17,10 +17,13 @@ export class DTOService {
         dtoType == MatsukazeObjectTypes.dialogueLine
       ) {
         var tmp: any = JSON.parse(JSON.stringify(data));
-        const tmpTypeData: any = tmp[dtoType.toLowerCase()]
-        dto = {id: tmp.id, projectId: tmp.projectId, type: dtoType, position: tmp.position, parentId: tmp.parentId};
+        var tmpTypeDataKey: string = String(dtoType)
+        tmpTypeDataKey = tmpTypeDataKey.charAt(0).toLowerCase() + tmpTypeDataKey.slice(1);
+        const tmpTypeData = tmp[tmpTypeDataKey];
+        dto = {id: tmp.id, projectId: tmp.projectId, matsukazeObjectType: dtoType, position: tmp.position, parentId: tmp.parentId};
         for(var key in tmpTypeData) { if(key!="id") dto[key] = tmpTypeData[key]; }
       }
+      if(dtoType == MatsukazeObjectTypes.dialogueLine) {console.log(tmp)}
     } else {
       dto = null;
     }

@@ -37,7 +37,7 @@ export enum LetteringTypes {
 
 export class MatsukazeObject {
   id: number = null;
-  type: MatsukazeObjectTypes;
+  matsukazeObjectType: MatsukazeObjectTypes;
 
   constructor(params: any) {
     for(let key in params) { if(!Array.isArray(params[key])) this[key] = params[key]; }
@@ -53,7 +53,7 @@ export class MatsukazeObject {
 export interface Positioned {
   id: number;
   position: number;
-  type: MatsukazeObjectTypes;
+  matsukazeObjectType: MatsukazeObjectTypes;
 }
 
 export class Project extends MatsukazeObject {
@@ -141,26 +141,25 @@ export class Publication extends MatsukazeObject {
 
 // STORY STRUCTURE ELEMENTS ----------------------------------------------------
 
-export interface StoryStructureElement extends Positioned {
-  id: number;
-  type: MatsukazeObjectTypes;
-  projectId: string;
-  parentId: string;
-}
-
 export interface StoryNode extends StoryStructureElement {
   children$: Observable<StoryStructureElement[]>;
   children: StoryStructureElement[];
 }
 
-export class Story extends MatsukazeObject implements StoryNode {
+export class StoryStructureElement extends MatsukazeObject implements Positioned, StoryNode {
+
+  matsukazeObjectType: MatsukazeObjectTypes;
   projectId: string;
-  id: number;
+  parentId: number;
   position: number;
-  type: MatsukazeObjectTypes.story;
-  parentId: string;
   children$: Observable<StoryStructureElement[]>;
   children: StoryStructureElement[];
+
+  constructor(params: any) { super(params); }
+
+}
+
+export class Story extends StoryStructureElement {
 
   title: string;
   summary: string;
@@ -168,20 +167,9 @@ export class Story extends MatsukazeObject implements StoryNode {
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
-  copy(): Story { return new Story(JSON.stringify(this)); }
-
 }
 
-export class Act extends MatsukazeObject implements StoryNode {
-  projectId: string;
-  id: number;
-  position: number;
-  type: MatsukazeObjectTypes.act;
-  parentId: string;
-  children$: Observable<StoryStructureElement[]>;
-  children: StoryStructureElement[];
+export class Act extends StoryStructureElement {
 
   title: string;
   summary: string;
@@ -189,20 +177,9 @@ export class Act extends MatsukazeObject implements StoryNode {
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
-  copy(): Act { return new Act(JSON.stringify(this)); }
-
 }
 
-export class Scene extends MatsukazeObject implements StoryNode {
-  projectId: string;
-  id: number;
-  position: number;
-  type: MatsukazeObjectTypes.scene;
-  parentId: string;
-  children$: Observable<StoryStructureElement[]>;
-  children: StoryStructureElement[];
+export class Scene extends StoryStructureElement {
 
   title: string;
   summary: string;
@@ -210,45 +187,25 @@ export class Scene extends MatsukazeObject implements StoryNode {
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
-  copy(): Scene { return new Scene(JSON.stringify(this)); }
-
 }
 
-export class Beat extends MatsukazeObject implements StoryNode {
-  projectId: string;
-  id: number;
-  position: number;
-  type: MatsukazeObjectTypes.beat;
-  parentId: string;
-  children$: Observable<StoryStructureElement[]>;
-  children: StoryStructureElement[];
+export class Beat extends StoryStructureElement {
 
   summary: string;
   action: string;
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
-  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.beat; }
 }
 
-export class DialogueLine extends MatsukazeObject implements StoryStructureElement {
-  projectId: string;
-  id: number;
-  position: number;
-  type: MatsukazeObjectTypes.dialogueLine;
-  parentId: string;
+export class DialogueLine extends StoryStructureElement {
 
+  type: string;
+  source: string;
   i18nBundle: I18nBundle;
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
-  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.dialogueLine; }
 }
 
 // PUBLICATION ELEMENTS ----------------------------------------------------
@@ -265,7 +222,4 @@ export class Page extends MatsukazeObject implements Positioned {
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
-  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.page; }
 }

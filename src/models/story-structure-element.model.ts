@@ -15,7 +15,7 @@ export class StoryStructureElement extends Model<StoryStructureElement> {
 
   @AllowNull(false)
   @Column
-  type: string;
+  matsukazeObjectType: string;
 
   @BelongsTo(() => Project, "projectId")
   project: Project;

@@ -8,7 +8,7 @@ import { RootController } from './endpoints/root/root.controller';
 
 import { UserModule } from './endpoints/api/0-1/modules/user/user.module';
 import { AuthModule } from './endpoints/api/0-1/modules/auth/auth.module';
-import { StoryStructureElementModule } from './endpoints/api/0-1/modules/storyStructureElement/story-structure-element.module';
+import { StoryStructureElementModule } from './endpoints/api/0-1/modules/story-structure-element/story-structure-element.module';
 import { DTOService } from './endpoints/api/0-1/services/data/dto.service';
 
 // Sequelize data models
