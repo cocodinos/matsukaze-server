@@ -3,14 +3,6 @@ import * as path from 'path';
 import { I18nModule, I18nJsonParser, QueryResolver, HeaderResolver, AcceptLanguageResolver, CookieResolver } from 'nestjs-i18n';
 import { SequelizeModule } from '@nestjs/sequelize';
 
-// Enpoint models
-import { RootController } from './endpoints/root/root.controller';
-
-import { UserModule } from './endpoints/api/0-1/modules/user/user.module';
-import { AuthModule } from './endpoints/api/0-1/modules/auth/auth.module';
-import { StoryStructureElementModule } from './endpoints/api/0-1/modules/story-structure-element/story-structure-element.module';
-import { DTOService } from './endpoints/api/0-1/services/data/dto.service';
-
 // Sequelize data models
 import { User } from './models/user.model';
 import { Role } from './models/role.model';
@@ -30,11 +22,21 @@ import { I18nBundleElement } from './models/i18n.bundle.element.model';
 import { PublicationPage } from './models/publication.page.model';
 import { StoryStructureElement } from './models/story-structure-element.model';
 
+// Enpoint models
+import { RootController } from './endpoints/root/root.controller';
+import { UserModule } from './endpoints/api/0-1/modules/user/user.module';
+import { AuthModule } from './endpoints/api/0-1/modules/auth/auth.module';
+import { StoryStructureElementModule } from './endpoints/api/0-1/modules/story-structure-element/story-structure-element.module';
+import { I18nBundleModule } from './endpoints/api/0-1/modules/i18n-bundle/i18n-bundle.module';
+import { ModelService } from './endpoints/api/0-1/services/model/model.service';
+
 @Module({
   imports: [
+    AuthModule,
     UserModule,
     AuthModule,
     StoryStructureElementModule,
+    I18nBundleModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
       host: '127.0.0.1',
@@ -77,9 +79,8 @@ import { StoryStructureElement } from './models/story-structure-element.model';
         new CookieResolver(['lang', 'locale', 'l']),
       ],
     }),
-    AuthModule,
   ],
   controllers: [RootController],
-  providers: [DTOService],
+  providers: [ModelService],
 })
 export class AppModule {}

@@ -14,8 +14,8 @@ export enum MatsukazeObjectTypes {
   beat = "Beat",
   dialogueLine = "DialogueLine",
   publication = "Publication",
-  I18nBundleElement = "I18nBundleElement",
-  I18nBundle = "I18nBundle",
+  i18nBundleElement = "I18nBundleElement",
+  i18nBundle = "I18nBundle",
   language = "Language",
   role = "Role",
   user = "User",
@@ -108,10 +108,11 @@ export class Language extends MatsukazeObject {
 
 export class I18nBundle extends MatsukazeObject {
   id: number;
+  elements: {[language: string]: I18nBundleElement};
 
   toJson(): any { return super.toJson(); }
 
-  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.I18nBundle; }
+  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.i18nBundle; }
 }
 
 export class I18nBundleElement extends MatsukazeObject {
@@ -123,7 +124,7 @@ export class I18nBundleElement extends MatsukazeObject {
 
   toJson(): any { return super.toJson(); }
 
-  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.I18nBundleElement; }
+  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.i18nBundleElement; }
 
 }
 

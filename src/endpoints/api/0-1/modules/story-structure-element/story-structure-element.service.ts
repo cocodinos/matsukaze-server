@@ -7,7 +7,9 @@ import { DialogueLine } from 'src/models/dialogue.line.model';
 import { Scene } from 'src/models/scene.model';
 import { StoryStructureElement } from 'src/models/story-structure-element.model';
 import { Story } from 'src/models/story.model';
-import { DTOService } from 'src/endpoints/api/0-1/services/data/dto.service'
+import { ModelService } from 'src/endpoints/api/0-1/services/model/model.service'
+import { MatsukazeObjectTypes } from '../../services/model/model';
+import { I18nBundleService } from '../i18n-bundle/i18n-bundle.service';
 
 @Injectable()
 export class StoryStructureElementService {
@@ -52,7 +54,8 @@ export class StoryStructureElementService {
     @InjectModel(Scene) private sceneModel: typeof Scene,
     @InjectModel(Beat) private beatModel: typeof Beat,
     @InjectModel(DialogueLine) private dialogueLineModel: typeof DialogueLine,
-    private dtoService: DTOService
+    private i18nBundleService: I18nBundleService,
+    private modelService: ModelService
   ) {}
 
   async create(data: any): Promise<any> {
@@ -75,7 +78,7 @@ export class StoryStructureElementService {
         targetModel.create(data);
         return result.reload()
       }).then(result => {
-        return this.dtoService.generateDTO(result)
+        return this.generateDTO(result, data.matsukazeObjectType)
     })} catch {
       return null
     }
@@ -90,7 +93,7 @@ export class StoryStructureElementService {
         ],
         where: {[Op.and]:{id: data.id, matsukazeObjectType: data.matsukazeObjectType}}
       }).then(result => {
-        return this.dtoService.generateDTO(result);
+        return this.generateDTO(result, data.matsukazeObjectType);
       });
     } catch {
       // error handling tbd
@@ -100,18 +103,19 @@ export class StoryStructureElementService {
 
   async gets(data: any): Promise<any[]> {
     try {
-      return this.storyStructureElementModel.findAll({
+      var queryResults = await this.storyStructureElementModel.findAll({
         attributes: ['id', 'matsukazeObjectType', 'projectId', 'position', 'parentId'],
         include: [
           {model: this.ORMConfig[data.matsukazeObjectType].model, attributes: this.ORMConfig[data.matsukazeObjectType].attributes}
         ],
         order: [['position', 'ASC']],
         where: {[Op.and]:{parentId: data.parentId, matsukazeObjectType: data.matsukazeObjectType}}
-      }).then(results => {
-        var outputJSONArray: any[] = []
-        for(var result of results) { outputJSONArray.push(this.dtoService.generateDTO(result)); }
-        return outputJSONArray;
-      });
+      })
+      var outputJSONArray: any[] = []
+      for(var result of queryResults) {
+        outputJSONArray.push(await this.generateDTO(result, data.matsukazeObjectType));
+      }
+      return outputJSONArray;
     } catch {
       return null;
     }
@@ -207,6 +211,15 @@ export class StoryStructureElementService {
       }
       return true;
     })
+  }
+
+  private async generateDTO(obj: any, matsukazeObjectType: MatsukazeObjectTypes): Promise<any> {
+    var dto = this.modelService.generateDTO(obj, matsukazeObjectType);
+    if(matsukazeObjectType==MatsukazeObjectTypes.dialogueLine) {
+      const bundleId: number = obj.get("dialogueLine")?.get("i18nBundleId");
+      if(bundleId) { dto["i18nBundle"] = await this.i18nBundleService.get({id: bundleId}); }
+    }
+    return dto
   }
 
   async errorHandler($error?: any): Promise<any> {

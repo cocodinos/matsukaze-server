@@ -1,4 +1,4 @@
-import { Controller, Request, Get, UseGuards, Query, Post, Body } from '@nestjs/common';
+import { Controller, Get, UseGuards, Query, Post, Body } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
 import { StoryStructureElementService } from './story-structure-element.service';
 
