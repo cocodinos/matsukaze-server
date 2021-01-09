@@ -35,8 +35,9 @@ export class ModelService {
         }
         case MatsukazeObjectTypes.i18nBundle: {
           dto = new I18nBundle(this.packageI18nBundleJson(data));
-          for(var element of data.i18nBundleElements) {
-            dto.i18BundleElements[element.get("languageId")] = this.generateDTO(element, MatsukazeObjectTypes.i18nBundleElement);
+          var elements = data.get("i18nBundleElements")
+          for(var element of elements) {
+            dto.i18nBundleElements[String(element.get("languageId"))] = this.generateDTO(element, MatsukazeObjectTypes.i18nBundleElement);
           }
           return dto;
         }
@@ -63,12 +64,12 @@ export class ModelService {
 
   private packageI18nBundleJson(data: any): any {
     const tmp: any = JSON.parse(JSON.stringify(data));
-    return {id: tmp.id, i18BundleElements: {}};
+    return {id: tmp.id, i18nBundleElements: {}};
   }
 
   // ISSUE WITH MODEL HERE: WE SHOULD BE RESOLVING THE LANGUAGE
   private packageI18nBundleElementJson(data: any): any {
-    const tmp: any = data;
+    const tmp: any = JSON.parse(JSON.stringify(data));
     return {
       id: tmp.id,
       language: tmp.languageId,

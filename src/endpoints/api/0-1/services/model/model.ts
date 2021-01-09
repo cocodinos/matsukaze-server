@@ -108,11 +108,15 @@ export class Language extends MatsukazeObject {
 
 export class I18nBundle extends MatsukazeObject {
   id: number;
-  elements: {[language: string]: I18nBundleElement};
+  i18nBundleElements: {[language: string]: I18nBundleElement};
 
   toJson(): any { return super.toJson(); }
 
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.i18nBundle; }
+
+  getText(language: string): string {
+    if(this?.i18nBundleElements[language]) return this.i18nBundleElements[language].text; else return null;
+  }
 }
 
 export class I18nBundleElement extends MatsukazeObject {
@@ -194,6 +198,7 @@ export class Beat extends StoryStructureElement {
 
   summary: string;
   action: string;
+  notes: string;
 
   constructor(params: any) { super(params); }
 
@@ -206,6 +211,10 @@ export class DialogueLine extends StoryStructureElement {
   i18nBundle: I18nBundle;
 
   constructor(params: any) { super(params); }
+
+  getText(language: string): string {
+    if(this.i18nBundle) return this.i18nBundle.getText(language); else return null;
+  }
 
 }
 
