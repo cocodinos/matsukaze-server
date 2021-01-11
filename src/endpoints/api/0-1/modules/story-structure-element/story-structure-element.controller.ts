@@ -4,7 +4,7 @@ import { StoryStructureElementService } from './story-structure-element.service'
 
 
 @Controller('api/0.1/storyStructureElement')
-export class ActController {
+export class StoryStructureElementController {
 
   constructor(
     private readonly storyStructureElementService: StoryStructureElementService

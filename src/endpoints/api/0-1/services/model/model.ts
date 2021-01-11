@@ -7,13 +7,15 @@ export enum PagePosition {
 
 export enum MatsukazeObjectTypes {
   story = "Story",
-  panel = "Panel",
-  page = "Page",
   act = "Act",
+  sceneSequence = "SceneSequence",
   scene = "Scene",
   beat = "Beat",
+  momentSequence = "MomentSequence",
+  moment = "Moment",
   dialogueLine = "DialogueLine",
   publication = "Publication",
+  page = "Page",
   i18nBundleElement = "I18nBundleElement",
   i18nBundle = "I18nBundle",
   language = "Language",
@@ -40,10 +42,18 @@ export class MatsukazeObject {
   matsukazeObjectType: MatsukazeObjectTypes;
 
   constructor(params: any) {
-    for(let key in params) { if(!Array.isArray(params[key])) this[key] = params[key]; }
+    for(let key in params) {
+      if(!Array.isArray(params[key]) && params[key]!="matsukazeObjectType") this[key] = params[key];
+    }
   }
 
-  toJson(): any { const json = JSON.stringify(this); }
+  toPOJO(): any {
+    var json: any = {};
+    for(let key in this) {
+      if(typeof this[key]!="object") json[key] = this[key];
+    }
+    return json;
+  }
 
   getType(): MatsukazeObjectTypes { return null; }
 }
@@ -66,8 +76,6 @@ export class Project extends MatsukazeObject {
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.project; }
 }
 
@@ -78,8 +86,6 @@ export class User extends MatsukazeObject {
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.user; }
 }
 
@@ -88,8 +94,6 @@ export class Role extends MatsukazeObject {
   name: string;
 
   constructor(params: any) { super(params); }
-
-  toJson(): any { return super.toJson(); }
 
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.role; }
 }
@@ -101,16 +105,12 @@ export class Language extends MatsukazeObject {
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.language; }
 }
 
 export class I18nBundle extends MatsukazeObject {
   id: number;
   i18nBundleElements: {[language: string]: I18nBundleElement};
-
-  toJson(): any { return super.toJson(); }
 
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.i18nBundle; }
 
@@ -126,8 +126,6 @@ export class I18nBundleElement extends MatsukazeObject {
 
   constructor(params: any) { super(params); }
 
-  toJson(): any { return super.toJson(); }
-
   getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.i18nBundleElement; }
 
 }
@@ -139,8 +137,6 @@ export class Publication extends MatsukazeObject {
   pages: Page[] = [];
 
   constructor(params: any) { super(params); }
-
-  toJson(): any { return super.toJson(); }
 
 }
 
@@ -169,6 +165,7 @@ export class Story extends StoryStructureElement {
   title: string;
   summary: string;
   notes: string;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.story;
 
   constructor(params: any) { super(params); }
 
@@ -179,26 +176,72 @@ export class Act extends StoryStructureElement {
   title: string;
   summary: string;
   notes: string;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.act;
 
   constructor(params: any) { super(params); }
 
+  getNavLabel(): string {
+    var tmp: string = "Act " + this.position;
+    if(this.title) tmp = tmp + ": " + this.title
+    return tmp
+  }
 }
 
-export class Scene extends StoryStructureElement {
+export class SceneSequence extends StoryStructureElement {
 
   title: string;
   summary: string;
   notes: string;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.sceneSequence;
 
   constructor(params: any) { super(params); }
 
+  getNavLabel(): string {
+    var tmp: string = "Scene " + this.position;
+    if(this.title) tmp = tmp + ": " + this.title
+    return tmp
+  }
+}
+
+export class Scene extends StoryStructureElement {
+
+  summary: string;
+  notes: string;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.scene;
+
+  constructor(params: any) { super(params); }
+
+  getNavLabel(): string {
+    var tmp: string = "Scene " + this.position;
+    return tmp
+  }
 }
 
 export class Beat extends StoryStructureElement {
 
   summary: string;
+  notes: string;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.beat;
+
+  constructor(params: any) { super(params); }
+
+}
+
+export class MomentSequence extends StoryStructureElement {
+
+  summary: string;
+  notes: string;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.momentSequence;
+
+  constructor(params: any) { super(params); }
+
+}
+
+export class Moment extends StoryStructureElement {
+
   action: string;
   notes: string;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.moment;
 
   constructor(params: any) { super(params); }
 
@@ -209,6 +252,7 @@ export class DialogueLine extends StoryStructureElement {
   type: string;
   source: string;
   i18nBundle: I18nBundle;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.dialogueLine;
 
   constructor(params: any) { super(params); }
 
@@ -223,7 +267,7 @@ export class DialogueLine extends StoryStructureElement {
 export class Page extends MatsukazeObject implements Positioned {
   id: number;
   position: number;
-  type: MatsukazeObjectTypes.dialogueLine;
+  type: MatsukazeObjectTypes = MatsukazeObjectTypes.page;
 
   publicationId: string;
   summary: string;

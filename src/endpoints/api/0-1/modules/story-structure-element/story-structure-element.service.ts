@@ -1,15 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Model, Op } from 'sequelize';
-import { Act } from 'src/models/act.model';
-import { Beat } from 'src/models/beat.model';
-import { DialogueLine } from 'src/models/dialogue.line.model';
-import { Scene } from 'src/models/scene.model';
+import { ModelService } from 'src/endpoints/api/0-1/services/model/model.service'
+import { I18nBundleService } from '../i18n-bundle/i18n-bundle.service';
+import { MatsukazeObjectTypes } from '../../services/model/model';
 import { StoryStructureElement } from 'src/models/story-structure-element.model';
 import { Story } from 'src/models/story.model';
-import { ModelService } from 'src/endpoints/api/0-1/services/model/model.service'
-import { MatsukazeObjectTypes } from '../../services/model/model';
-import { I18nBundleService } from '../i18n-bundle/i18n-bundle.service';
+import { Act } from 'src/models/act.model';
+import { SceneSequence } from 'src/models/scene-sequence.model';
+import { Scene } from 'src/models/scene.model';
+import { Beat } from 'src/models/beat.model';
+import { MomentSequence } from 'src/models/moment-sequence.model';
+import { Moment } from 'src/models/moment.model';
+import { DialogueLine } from 'src/models/dialogue.line.model';
 
 @Injectable()
 export class StoryStructureElementService {
@@ -27,15 +30,33 @@ export class StoryStructureElementService {
       attributes: ['id', 'title', 'summary', 'notes'],
       updateFields: ['title', 'summary', 'notes'],
     },
+    SceneSequence: {
+      key: "sceneSequence",
+      model: this.sceneSequenceModel,
+      attributes: ['id', 'title', 'summary', 'notes'],
+      updateFields: ['title', 'summary', 'notes'],
+    },
     Scene: {
       key: "scene",
       model: this.sceneModel,
-      attributes: ['id', 'title', 'summary', 'notes'],
-      updateFields: ['title', 'summary', 'notes'],
+      attributes: ['id', 'summary', 'notes'],
+      updateFields: ['summary', 'notes'],
     },
     Beat: {
       key: "beat",
       model: this.beatModel,
+      attributes: ['id', 'summary', 'notes'],
+      updateFields: ['summary', 'notes'],
+    },
+    MomentSequence: {
+      key: "momentSequence",
+      model: this.momentSequenceModel,
+      attributes: ['id', 'summary', 'notes'],
+      updateFields: ['summary', 'notes'],
+    },
+    Moment: {
+      key: "moment",
+      model: this.momentModel,
       attributes: ['id', 'action', 'notes'],
       updateFields: ['action', 'notes'],
     },
@@ -52,7 +73,10 @@ export class StoryStructureElementService {
     @InjectModel(Story) private storyModel: typeof Story,
     @InjectModel(Act) private actModel: typeof Act,
     @InjectModel(Scene) private sceneModel: typeof Scene,
+    @InjectModel(SceneSequence) private sceneSequenceModel: typeof SceneSequence,
     @InjectModel(Beat) private beatModel: typeof Beat,
+    @InjectModel(MomentSequence) private momentSequenceModel: typeof MomentSequence,
+    @InjectModel(Moment) private momentModel: typeof Moment,
     @InjectModel(DialogueLine) private dialogueLineModel: typeof DialogueLine,
     private i18nBundleService: I18nBundleService,
     private modelService: ModelService

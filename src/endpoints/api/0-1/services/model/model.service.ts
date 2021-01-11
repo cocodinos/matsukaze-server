@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Act, Beat, DialogueLine, I18nBundle, I18nBundleElement, MatsukazeObject, MatsukazeObjectTypes, Scene, Story } from './model';
+import { Act, Beat, DialogueLine, I18nBundle, I18nBundleElement, MatsukazeObject, MatsukazeObjectTypes, Moment, MomentSequence, Scene, SceneSequence, Story } from './model';
 
 @Injectable()
 export class ModelService {
@@ -21,12 +21,24 @@ export class ModelService {
           dto = new Act(this.packageStoryStructureElementJson(data, type));
           return dto;
         }
+        case MatsukazeObjectTypes.sceneSequence: {
+          dto = new SceneSequence(this.packageStoryStructureElementJson(data, type));
+          return dto;
+        }
         case MatsukazeObjectTypes.scene: {
           dto = new Scene(this.packageStoryStructureElementJson(data, type));
           return dto;
         }
         case MatsukazeObjectTypes.beat: {
           dto = new Beat(this.packageStoryStructureElementJson(data, type));
+          return dto;
+        }
+        case MatsukazeObjectTypes.momentSequence: {
+          dto = new MomentSequence(this.packageStoryStructureElementJson(data, type));
+          return dto;
+        }
+        case MatsukazeObjectTypes.moment: {
+          dto = new Moment(this.packageStoryStructureElementJson(data, type));
           return dto;
         }
         case MatsukazeObjectTypes.dialogueLine: {
@@ -52,12 +64,11 @@ export class ModelService {
 
   private packageStoryStructureElementJson(data: any, type?: MatsukazeObjectTypes): any {
     var dto: any = {}
-    var dtoType: MatsukazeObjectTypes = type;
     var tmp: any = JSON.parse(JSON.stringify(data));
-    var tmpTypeDataKey: string = String(dtoType)
+    var tmpTypeDataKey: string = String(type)
     tmpTypeDataKey = tmpTypeDataKey.charAt(0).toLowerCase() + tmpTypeDataKey.slice(1);
     const tmpTypeData = tmp[tmpTypeDataKey];
-    dto = {id: tmp.id, projectId: tmp.projectId, matsukazeObjectType: dtoType, position: tmp.position, parentId: tmp.parentId};
+    dto = {id: tmp.id, projectId: tmp.projectId, position: tmp.position, parentId: tmp.parentId};
     for(var key in tmpTypeData) { if(key!="id") dto[key] = tmpTypeData[key]; }
     return dto;
   }

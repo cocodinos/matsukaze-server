@@ -4,9 +4,6 @@ import { StoryStructureElement } from './story-structure-element.model';
 @Table
 export class Scene extends Model<Scene> {
 
-  @Column
-  title: string;
-
   @Column(DataType.TEXT)
   summary: string;
 

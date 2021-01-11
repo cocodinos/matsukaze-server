@@ -2,10 +2,10 @@ import { Table, Column, Model, BelongsTo, DataType } from 'sequelize-typescript'
 import { StoryStructureElement } from './story-structure-element.model';
 
 @Table
-export class Beat extends Model<Beat> {
+export class Moment extends Model<Moment> {
 
   @Column(DataType.TEXT)
-  summary: string;
+  action: string;
 
   @Column(DataType.TEXT)
   notes: string;

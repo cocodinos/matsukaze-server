@@ -11,8 +11,11 @@ import { Project } from './models/project.model';
 import { ProjectUser } from './models/project.user.model';
 import { Story } from './models/story.model';
 import { Act } from './models/act.model';
+import { SceneSequence } from './models/scene-sequence.model';
 import { Scene } from './models/scene.model';
 import { Beat } from './models/beat.model';
+import { MomentSequence } from './models/moment-sequence.model';
+import { Moment } from './models/moment.model';
 import { Language } from './models/language.model';
 import { Page } from './models/page.model';
 import { Publication } from './models/publication.model';
@@ -22,13 +25,15 @@ import { I18nBundleElement } from './models/i18n.bundle.element.model';
 import { PublicationPage } from './models/publication.page.model';
 import { StoryStructureElement } from './models/story-structure-element.model';
 
-// Enpoint models
+// Enpoint modules
 import { RootController } from './endpoints/root/root.controller';
 import { UserModule } from './endpoints/api/0-1/modules/user/user.module';
 import { AuthModule } from './endpoints/api/0-1/modules/auth/auth.module';
 import { StoryStructureElementModule } from './endpoints/api/0-1/modules/story-structure-element/story-structure-element.module';
 import { I18nBundleModule } from './endpoints/api/0-1/modules/i18n-bundle/i18n-bundle.module';
 import { ModelService } from './endpoints/api/0-1/services/model/model.service';
+import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
+
 
 @Module({
   imports: [
@@ -36,6 +41,7 @@ import { ModelService } from './endpoints/api/0-1/services/model/model.service';
     UserModule,
     AuthModule,
     StoryStructureElementModule,
+    StoryModule,
     I18nBundleModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
@@ -53,8 +59,11 @@ import { ModelService } from './endpoints/api/0-1/services/model/model.service';
         StoryStructureElement,
         Story,
         Act,
+        SceneSequence,
         Scene,
         Beat,
+        MomentSequence,
+        Moment,
         Language,
         Page,
         Publication,
