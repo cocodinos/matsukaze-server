@@ -42,9 +42,8 @@ export class MatsukazeObject {
   matsukazeObjectType: MatsukazeObjectTypes;
 
   constructor(params: any) {
-    for(let key in params) {
-      if(!Array.isArray(params[key]) && params[key]!="matsukazeObjectType") this[key] = params[key];
-    }
+    this.id = params.id;
+    this.matsukazeObjectType = null;
   }
 
   toPOJO(): any {
@@ -110,9 +109,16 @@ export class Language extends MatsukazeObject {
 
 export class I18nBundle extends MatsukazeObject {
   id: number;
-  i18nBundleElements: {[language: string]: I18nBundleElement};
+  i18nBundleElements: {[language: string]: I18nBundleElement} = {};
+  matsukazeObjectType = MatsukazeObjectTypes.i18nBundle
 
-  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.i18nBundle; }
+  constructor(params: any) {
+    super(params);
+    this.id = params.id;
+    for(let key in params.i18nBundleElements) {
+      this.i18nBundleElements[String(key)] = new I18nBundleElement(params.i18nBundleElements[key]);
+    }
+  }
 
   getText(language: string): string {
     if(this?.i18nBundleElements[language]) return this.i18nBundleElements[language].text; else return null;
@@ -123,10 +129,14 @@ export class I18nBundleElement extends MatsukazeObject {
   id: number;
   language: Language;
   text: string;
+  matsukazeObjectType = MatsukazeObjectTypes.i18nBundleElement
 
-  constructor(params: any) { super(params); }
-
-  getType(): MatsukazeObjectTypes { return MatsukazeObjectTypes.i18nBundleElement; }
+  constructor(params: any) {
+    super(params);
+    this.id = params.id;
+    this.language = params.language;
+    this.text = params.text;
+  }
 
 }
 
@@ -154,9 +164,19 @@ export class StoryStructureElement extends MatsukazeObject implements Positioned
   parentId: number;
   position: number;
   children$: Observable<StoryStructureElement[]>;
-  children: StoryStructureElement[];
+  children: StoryStructureElement[] = [];
 
-  constructor(params: any) { super(params); }
+  constructor(params: any) {
+    super(params);
+    this.projectId = params.projectId;
+    this.parentId = params.parentId;
+    this.position = params.position;
+    this.children = [];
+  }
+
+  getNavLabel(): string {
+    return null;
+  }
 
 }
 
@@ -167,8 +187,19 @@ export class Story extends StoryStructureElement {
   notes: string;
   matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.story;
 
-  constructor(params: any) { super(params); }
+  constructor(params: any) {
+    super(params);
+    this.title = params.title;
+    this.summary = params.summary;
+    this.notes = params.note;
+    if(params?.children) {
+      for(let child of params?.children) {
+        this.children.push(new Act(child));
+      }
+    }
+  }
 
+  getNavLabel(): string { return "Story"; }
 }
 
 export class Act extends StoryStructureElement {
@@ -178,13 +209,19 @@ export class Act extends StoryStructureElement {
   notes: string;
   matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.act;
 
-  constructor(params: any) { super(params); }
-
-  getNavLabel(): string {
-    var tmp: string = "Act " + this.position;
-    if(this.title) tmp = tmp + ": " + this.title
-    return tmp
+  constructor(params: any) {
+    super(params);
+    this.title = params.title;
+    this.summary = params.summary;
+    this.notes = params.note;
+    if(params?.children) {
+      for(let child of params?.children) {
+        this.children.push(new SceneSequence(child));
+      }
+    }
   }
+
+  getNavLabel(): string { return "Act " + this.position; }
 }
 
 export class SceneSequence extends StoryStructureElement {
@@ -194,13 +231,19 @@ export class SceneSequence extends StoryStructureElement {
   notes: string;
   matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.sceneSequence;
 
-  constructor(params: any) { super(params); }
-
-  getNavLabel(): string {
-    var tmp: string = "Scene " + this.position;
-    if(this.title) tmp = tmp + ": " + this.title
-    return tmp
+  constructor(params: any) {
+    super(params);
+    this.title = params.title;
+    this.summary = params.summary;
+    this.notes = params.note;
+    if(params?.children) {
+      for(let child of params?.children) {
+        this.children.push(new Scene(child));
+      }
+    }
   }
+
+  getNavLabel(): string { return "Scene sequence " + this.position; }
 }
 
 export class Scene extends StoryStructureElement {
@@ -209,12 +252,18 @@ export class Scene extends StoryStructureElement {
   notes: string;
   matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.scene;
 
-  constructor(params: any) { super(params); }
-
-  getNavLabel(): string {
-    var tmp: string = "Scene " + this.position;
-    return tmp
+  constructor(params: any) {
+    super(params);
+    this.summary = params.summary;
+    this.notes = params.note;
+    if(params?.children) {
+      for(let child of params?.children) {
+        this.children.push(new Beat(child));
+      }
+    }
   }
+
+  getNavLabel(): string { return "Scene " + this.position; }
 }
 
 export class Beat extends StoryStructureElement {
@@ -223,8 +272,18 @@ export class Beat extends StoryStructureElement {
   notes: string;
   matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.beat;
 
-  constructor(params: any) { super(params); }
+  constructor(params: any) {
+    super(params);
+    this.summary = params.summary;
+    this.notes = params.note;
+    if(params?.children) {
+      for(let child of params?.children) {
+        this.children.push(new MomentSequence(child));
+      }
+    }
+  }
 
+  getNavLabel(): string { return "Beat " + this.position; }
 }
 
 export class MomentSequence extends StoryStructureElement {
@@ -233,8 +292,18 @@ export class MomentSequence extends StoryStructureElement {
   notes: string;
   matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.momentSequence;
 
-  constructor(params: any) { super(params); }
+  constructor(params: any) {
+    super(params);
+    this.summary = params.summary;
+    this.notes = params.note;
+    if(params?.children) {
+      for(let child of params?.children) {
+        this.children.push(new Moment(child));
+      }
+    }
+  }
 
+  getNavLabel(): string { return "Moment seqence " + this.position; }
 }
 
 export class Moment extends StoryStructureElement {
@@ -243,8 +312,18 @@ export class Moment extends StoryStructureElement {
   notes: string;
   matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.moment;
 
-  constructor(params: any) { super(params); }
+  constructor(params: any) {
+    super(params);
+    this.action = params.action;
+    this.notes = params.note;
+    if(params?.children) {
+      for(let child of params?.children) {
+        this.children.push(new DialogueLine(child));
+      }
+    }
+  }
 
+  getNavLabel(): string { return "Moment " + this.position; }
 }
 
 export class DialogueLine extends StoryStructureElement {
@@ -254,11 +333,18 @@ export class DialogueLine extends StoryStructureElement {
   i18nBundle: I18nBundle;
   matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.dialogueLine;
 
-  constructor(params: any) { super(params); }
+  constructor(params: any) {
+    super(params);
+    this.type = params.type;
+    this.source = params.source;
+    if(params.i18nBundle) this.i18nBundle = new I18nBundle(params.i18nBundle);
+  }
 
   getText(language: string): string {
     if(this.i18nBundle) return this.i18nBundle.getText(language); else return null;
   }
+
+  getNavLabel(): string { return "Dialogue line " + this.position; }
 
 }
 
