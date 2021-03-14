@@ -13,6 +13,6 @@ export class RootController {
       navbar: await i18n.translate("digenes.navbar", query.lang),
       content: await i18n.translate("digenes.content.home", query.lang)
     }
-    return {url: "/home/", lang: lang, params: viewParams};
+    return {url: "/", lang: lang, params: viewParams};
   }
 }

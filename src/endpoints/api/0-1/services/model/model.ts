@@ -157,6 +157,19 @@ export interface StoryNode extends StoryStructureElement {
   children: StoryStructureElement[];
 }
 
+export let MatsukazeStoryStructureElementTypes = {
+  [MatsukazeObjectTypes.story]: {label: "Story", hierarchy: 1},
+  [MatsukazeObjectTypes.act]: {label: "Act", hierarchy: 2},
+  [MatsukazeObjectTypes.sceneSequence]: {label: "Scene sequence", hierarchy: 3},
+  [MatsukazeObjectTypes.scene]: {label: "Scene", hierarchy: 4},
+  [MatsukazeObjectTypes.beat]: {label: "Beat", hierarchy: 5},
+  [MatsukazeObjectTypes.momentSequence]: {label: "Moment sequence", hierarchy: 6},
+  [MatsukazeObjectTypes.moment]: {label: "Moment", hierarchy: 7},
+  [MatsukazeObjectTypes.dialogueLine]: {label: "Dialogue line", hierarchy: 8}
+}
+
+
+
 export class StoryStructureElement extends MatsukazeObject implements Positioned, StoryNode {
 
   matsukazeObjectType: MatsukazeObjectTypes;
@@ -174,9 +187,7 @@ export class StoryStructureElement extends MatsukazeObject implements Positioned
     this.children = [];
   }
 
-  getNavLabel(): string {
-    return null;
-  }
+  getNavLabel(): string { return null; }
 
 }
 
@@ -200,6 +211,16 @@ export class Story extends StoryStructureElement {
   }
 
   getNavLabel(): string { return "Story"; }
+
+  toParams(): any {
+    let params: any = {};
+    params.matsukazeObjectType = this.matsukazeObjectType;
+    params.id = this.id;
+    params.title = this.title;
+    params.summary = this.summary;
+    params.notes = this.notes;
+    return params;
+  }
 }
 
 export class Act extends StoryStructureElement {
@@ -213,7 +234,7 @@ export class Act extends StoryStructureElement {
     super(params);
     this.title = params.title;
     this.summary = params.summary;
-    this.notes = params.note;
+    this.notes = params.notes;
     if(params?.children) {
       for(let child of params?.children) {
         this.children.push(new SceneSequence(child));
@@ -222,6 +243,16 @@ export class Act extends StoryStructureElement {
   }
 
   getNavLabel(): string { return "Act " + this.position; }
+
+  toParams(): any {
+    let params: any = {};
+    params.matsukazeObjectType = this.matsukazeObjectType;
+    params.id = this.id;
+    params.title = this.title;
+    params.summary = this.summary;
+    params.notes = this.notes;
+    return params;
+  }
 }
 
 export class SceneSequence extends StoryStructureElement {
@@ -235,7 +266,7 @@ export class SceneSequence extends StoryStructureElement {
     super(params);
     this.title = params.title;
     this.summary = params.summary;
-    this.notes = params.note;
+    this.notes = params.notes;
     if(params?.children) {
       for(let child of params?.children) {
         this.children.push(new Scene(child));
@@ -244,6 +275,16 @@ export class SceneSequence extends StoryStructureElement {
   }
 
   getNavLabel(): string { return "Scene sequence " + this.position; }
+
+  toParams(): any {
+    let params: any = {};
+    params.matsukazeObjectType = this.matsukazeObjectType;
+    params.id = this.id;
+    params.title = this.title;
+    params.summary = this.summary;
+    params.notes = this.notes;
+    return params;
+  }
 }
 
 export class Scene extends StoryStructureElement {
@@ -255,7 +296,7 @@ export class Scene extends StoryStructureElement {
   constructor(params: any) {
     super(params);
     this.summary = params.summary;
-    this.notes = params.note;
+    this.notes = params.notes;
     if(params?.children) {
       for(let child of params?.children) {
         this.children.push(new Beat(child));
@@ -264,6 +305,15 @@ export class Scene extends StoryStructureElement {
   }
 
   getNavLabel(): string { return "Scene " + this.position; }
+
+  toParams(): any {
+    let params: any = {};
+    params.matsukazeObjectType = this.matsukazeObjectType;
+    params.id = this.id;
+    params.summary = this.summary;
+    params.notes = this.notes;
+    return params;
+  }
 }
 
 export class Beat extends StoryStructureElement {
@@ -275,7 +325,7 @@ export class Beat extends StoryStructureElement {
   constructor(params: any) {
     super(params);
     this.summary = params.summary;
-    this.notes = params.note;
+    this.notes = params.notes;
     if(params?.children) {
       for(let child of params?.children) {
         this.children.push(new MomentSequence(child));
@@ -284,6 +334,15 @@ export class Beat extends StoryStructureElement {
   }
 
   getNavLabel(): string { return "Beat " + this.position; }
+
+  toParams(): any {
+    let params: any = {};
+    params.matsukazeObjectType = this.matsukazeObjectType;
+    params.id = this.id;
+    params.summary = this.summary;
+    params.notes = this.notes;
+    return params;
+  }
 }
 
 export class MomentSequence extends StoryStructureElement {
@@ -295,7 +354,7 @@ export class MomentSequence extends StoryStructureElement {
   constructor(params: any) {
     super(params);
     this.summary = params.summary;
-    this.notes = params.note;
+    this.notes = params.notes;
     if(params?.children) {
       for(let child of params?.children) {
         this.children.push(new Moment(child));
@@ -304,6 +363,15 @@ export class MomentSequence extends StoryStructureElement {
   }
 
   getNavLabel(): string { return "Moment seqence " + this.position; }
+
+  toParams(): any {
+    let params: any = {};
+    params.matsukazeObjectType = this.matsukazeObjectType;
+    params.id = this.id;
+    params.summary = this.summary;
+    params.notes = this.notes;
+    return params;
+  }
 }
 
 export class Moment extends StoryStructureElement {
@@ -315,7 +383,7 @@ export class Moment extends StoryStructureElement {
   constructor(params: any) {
     super(params);
     this.action = params.action;
-    this.notes = params.note;
+    this.notes = params.notes;
     if(params?.children) {
       for(let child of params?.children) {
         this.children.push(new DialogueLine(child));
@@ -324,6 +392,15 @@ export class Moment extends StoryStructureElement {
   }
 
   getNavLabel(): string { return "Moment " + this.position; }
+
+  toParams(): any {
+    let params: any = {};
+    params.matsukazeObjectType = this.matsukazeObjectType;
+    params.id = this.id;
+    params.action = this.action;
+    params.notes = this.notes;
+    return params;
+  }
 }
 
 export class DialogueLine extends StoryStructureElement {
@@ -345,6 +422,15 @@ export class DialogueLine extends StoryStructureElement {
   }
 
   getNavLabel(): string { return "Dialogue line " + this.position; }
+
+  toParams(): any {
+    let params: any = {};
+    params.matsukazeObjectType = this.matsukazeObjectType;
+    params.id = this.id;
+    params.type = this.type;
+    params.i18nBundle = this.i18nBundle;
+    return params;
+  }
 
 }
 

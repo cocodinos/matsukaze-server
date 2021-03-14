@@ -151,10 +151,11 @@ export class StoryStructureElementService {
       include: [{model: this.ORMConfig[data.matsukazeObjectType].model, attributes: this.ORMConfig[data.matsukazeObjectType].attributes}],
       where: {[Op.and]:{id: data.id, matsukazeObjectType: data.matsukazeObjectType}}
     }).then(storyStructureElement => {
+      console.log(storyStructureElement);
       delete data.id;
       const targetModel = this.ORMConfig[storyStructureElement.matsukazeObjectType].model;
-      const childElement: any = storyStructureElement.get(storyStructureElement.matsukazeObjectType.toLowerCase());
-      const targetClassId = childElement.get("id");
+      const targetElement: any = storyStructureElement.get(this.ORMConfig[data.matsukazeObjectType].key);
+      const targetClassId = targetElement.get("id");
       return targetModel.update(
         data,
         {where: {id: Number(targetClassId)}},
