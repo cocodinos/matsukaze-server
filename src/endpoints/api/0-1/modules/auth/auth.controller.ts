@@ -14,8 +14,6 @@ export class AuthController {
   }
 
   @Post("logout")
-  async logout() {
-    return true;
-  }
+  async logout() { return true; }
 
 }

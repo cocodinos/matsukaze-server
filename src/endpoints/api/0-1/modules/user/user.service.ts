@@ -41,12 +41,15 @@ export class UserService {
   }
 
   async verify(email: string, password: string): Promise<any> {
-    var dto: any = null;
-    const user: any = await this.findOne(email);
+    const user = await this.userModel.findOne({
+      attributes: ['id', 'email', 'hash'],
+      where: {email},
+      include: [{model: Role, attributes: ['id', 'name'], through: {attributes: []}}]
+    });
     if (user && await bcrypt.compare(password, user.hash)) {
-      dto = this.modelService.generateDTO(user, MatsukazeObjectTypes.user);
+      return this.modelService.generateDTO(user, MatsukazeObjectTypes.user)
     };
-    return dto;
+    return null;
   }
 
   async findAll(): Promise<any[]> {
