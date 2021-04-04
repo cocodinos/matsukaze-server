@@ -1,18 +1,17 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller("api/0.1/user")
 export class UserController {
 
-  constructor(private readonly userService: UserService) {
+  constructor(private readonly userService: UserService) { }
 
-  }
-
-  @Get(":id")
-  async root(@Param() params) {
-    if(params.id) {
-      // this.userService.findOne(params.id)
-      return(await this.userService.findOne(params.id));
+  @Post("create")
+  async create(@Body() data) {
+    if(data.email && data.password) {
+      let user = await this.userService.create(data, null);
+      console.log(user);
+      return user;
     }
     return null;
   }
