@@ -32,15 +32,21 @@ export class UserService {
   async create(params: any, roles: number[]): Promise<any> {
     try {
       let obj: any = null;
+      let activationCode: string = null;
       if(params?.email && params?.password) {
         obj = await this._findOne({email:params.email}).then((user) => {
           if(!user) return this._hashPassword(params.password);
           throw this.error.user.create.exists;
         }).then(password => {
-          if(password) return this.userModel.create({
-            email: params.email,
-            hash: password
-          });
+          if(password) {
+            activationCode = this._generateActivationToken(32);
+            return this.userModel.create({
+              email: params.email,
+              hash: password,
+              active: false,
+              activationCode: activationCode
+            });
+          }
           throw this.error.user.create.fail;
         }).then(user => {
           if(user) return this.userRoleModel.create({
@@ -65,7 +71,7 @@ export class UserService {
   }
 
   async verify(email: string, password: string): Promise<any> {
-    const user = await this._findOne({email: email});
+    const user = await this._findOne({email: email, active: true});
     if (user && await bcrypt.compare(password, user.hash)) {
       return this.modelService.generateDTO(user, MatsukazeObjectTypes.user)
     };
@@ -85,5 +91,9 @@ export class UserService {
     return bcrypt.genSalt(10).then(salt => {
       return bcrypt.hash(password, salt);
     });
+  }
+
+  private _generateActivationToken(size: number): string {
+    return [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
   }
 }
