@@ -10,7 +10,6 @@ export class UserController {
   async create(@Body() data) {
     if(data.email && data.password) {
       let user = await this.userService.create(data, null);
-      console.log(user);
       return user;
     }
     return null;

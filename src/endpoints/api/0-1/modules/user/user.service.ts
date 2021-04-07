@@ -9,6 +9,20 @@ import { MatsukazeObjectTypes } from '../../services/model/model';
 
 @Injectable()
 export class UserService {
+  private error: any = {
+    user: {
+      create: {
+        exists: "user.create.exists",
+        fail: "user.create.fail"
+      }
+    },
+    role: {
+      create: {
+        fail: "role.create.fail"
+      }
+    }
+  }
+
   constructor(
     @InjectModel(User) private userModel: typeof User,
     @InjectModel(UserRole) private userRoleModel: typeof UserRole,
@@ -17,58 +31,54 @@ export class UserService {
 
   async create(params: any, roles: number[]): Promise<any> {
     try {
-      let user: any = null;
+      let obj: any = null;
       if(params?.email && params?.password) {
-        // MAKE SURE NO TWO ACCOUNTS WITH THE SAME EMAIL
-        user = this.userModel.create({
-          email: params.email,
-          hash: await this._hashPassword(params.password)
-        }).then(data => {
-          const userId = data.id;
-          console.log(userId)
-          return this.userRoleModel.create({
-            userId: userId,
+        obj = await this._findOne({email:params.email}).then((user) => {
+          if(!user) return this._hashPassword(params.password);
+          throw this.error.user.create.exists;
+        }).then(password => {
+          if(password) return this.userModel.create({
+            email: params.email,
+            hash: password
+          });
+          throw this.error.user.create.fail;
+        }).then(user => {
+          if(user) return this.userRoleModel.create({
+            userId: user.id,
             roleId: 3
           });
+          throw this.error.role.create.fail;
         }).then(data => {
-          return this.findOne(params.email);
+          if(data) return this._findOne({email: params.email});
+          throw this.error.user.create.fail;
+        }).then(user => {
+          if(user) return this.modelService.generateDTO(user, MatsukazeObjectTypes.user);
+          throw this.error.user.create.fail;
+        }).catch(error => {
+          return this.modelService.generateDTO({type:error}, MatsukazeObjectTypes.error);
         });
       }
-      return user;
+      return obj;
     } catch {
       return null;
     }
   }
 
   async verify(email: string, password: string): Promise<any> {
-    const user = await this.userModel.findOne({
-      attributes: ['id', 'email', 'hash'],
-      where: {email},
-      include: [{model: Role, attributes: ['id', 'name'], through: {attributes: []}}]
-    });
+    const user = await this._findOne({email: email});
     if (user && await bcrypt.compare(password, user.hash)) {
       return this.modelService.generateDTO(user, MatsukazeObjectTypes.user)
     };
     return null;
   }
 
-  async findAll(): Promise<any[]> {
-    return this.userModel.findAll();
-  }
-
-  async findOne(email: string): Promise<any> {
+  private async _findOne(params: any): Promise<any> {
     const user = await this.userModel.findOne({
       attributes: ['id', 'email', 'hash'],
-      where: {email},
+      where: params,
       include: [{model: Role, attributes: ['id', 'name'], through: {attributes: []}}]
     });
-    const dto = this.modelService.generateDTO(user, MatsukazeObjectTypes.user)
-    return dto;
-  }
-
-  async delete(id: string): Promise<void> {
-    const user = await this.findOne(id);
-    await user.destroy();
+    return user;
   }
 
   private async _hashPassword(password: string): Promise<string> {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Act, Beat, DialogueLine, I18nBundle, I18nBundleElement, MatsukazeObject, MatsukazeObjectTypes, Moment, MomentSequence, Scene, SceneSequence, Story, User } from './model';
+import { Act, Beat, DialogueLine, I18nBundle, I18nBundleElement, MatsukazeError, MatsukazeObject, MatsukazeObjectTypes, Moment, MomentSequence, Scene, SceneSequence, Story, User } from './model';
 
 @Injectable()
 export class ModelService {
@@ -59,6 +59,10 @@ export class ModelService {
         }
         case MatsukazeObjectTypes.user: {
           dto = new User(data);
+          return dto;
+        }
+        case MatsukazeObjectTypes.error: {
+          dto = new MatsukazeError(data);
           return dto;
         }
       }

@@ -21,7 +21,8 @@ export enum MatsukazeObjectTypes {
   language = "Language",
   role = "Role",
   user = "User",
-  project = "Project"
+  project = "Project",
+  error = "Error"
 }
 
 export enum LetteringTypes {
@@ -157,7 +158,20 @@ export class Publication extends MatsukazeObject {
   pages: Page[] = [];
 
   constructor(params: any) { super(params); }
+}
 
+export class MatsukazeError extends MatsukazeObject {
+  id: number;
+  type: string;
+  data: string;
+  matsukazeObjectType: MatsukazeObjectTypes = MatsukazeObjectTypes.error;
+
+  constructor(params: any) {
+    super(params);
+    this.id = params.id;
+    this.type = params.type;
+    this.data = params?.data;
+  }
 }
 
 // STORY STRUCTURE ELEMENTS ----------------------------------------------------
