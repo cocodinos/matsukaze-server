@@ -9,11 +9,14 @@ import { MatsukazeObjectTypes } from '../../services/model/model';
 
 @Injectable()
 export class UserService {
-  private error: any = {
+  private _error: any = {
     user: {
       create: {
         exists: "user.create.exists",
         fail: "user.create.fail"
+      },
+      login: {
+        fail: "user.login.fail"
       }
     },
     role: {
@@ -34,9 +37,9 @@ export class UserService {
       let obj: any = null;
       let activationCode: string = null;
       if(params?.email && params?.password) {
-        obj = await this._findOne({email:params.email}).then((user) => {
+        obj = await this._findOne({email:params.email, active: true}).then((user) => {
           if(!user) return this._hashPassword(params.password);
-          throw this.error.user.create.exists;
+          throw this._error.user.create.exists;
         }).then(password => {
           if(password) {
             activationCode = this._generateActivationToken(32);
@@ -47,19 +50,19 @@ export class UserService {
               activationCode: activationCode
             });
           }
-          throw this.error.user.create.fail;
+          throw this._error.user.create.fail;
         }).then(user => {
           if(user) return this.userRoleModel.create({
             userId: user.id,
             roleId: 3
           });
-          throw this.error.role.create.fail;
+          throw this._error.role.create.fail;
         }).then(data => {
           if(data) return this._findOne({email: params.email});
-          throw this.error.user.create.fail;
+          throw this._error.user.create.fail;
         }).then(user => {
           if(user) return this.modelService.generateDTO(user, MatsukazeObjectTypes.user);
-          throw this.error.user.create.fail;
+          throw this._error.user.create.fail;
         }).catch(error => {
           return this.modelService.generateDTO({type:error}, MatsukazeObjectTypes.error);
         });
@@ -76,6 +79,10 @@ export class UserService {
       return this.modelService.generateDTO(user, MatsukazeObjectTypes.user)
     };
     return null;
+  }
+
+  private async _sendConfirmationEmail(activationCode: string): Promise<boolean> {
+    return true;
   }
 
   private async _findOne(params: any): Promise<any> {

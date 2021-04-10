@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import * as path from 'path';
 import { I18nModule, I18nJsonParser, QueryResolver, HeaderResolver, AcceptLanguageResolver, CookieResolver } from 'nestjs-i18n';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 // Sequelize data models
 import { User } from './models/user.model';
@@ -88,6 +90,19 @@ import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
         new CookieResolver(['lang', 'locale', 'l']),
       ],
     }),
+    MailerModule.forRoot({
+      transport: 'smtps://user@domain.com:pass@smtp.domain.com',
+      defaults: {
+        from:'"nest-modules" <modules@nestjs.com>',
+      },
+      template: {
+        dir: __dirname + '/views',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    })
   ],
   controllers: [RootController],
   providers: [ModelService],
