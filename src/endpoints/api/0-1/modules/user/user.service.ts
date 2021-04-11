@@ -7,19 +7,25 @@ import * as bcrypt from 'bcrypt';
 import { ModelService } from '../../services/model/model.service';
 import { MatsukazeObjectTypes } from '../../services/model/model';
 import { MailerService } from '@nestjs-modules/mailer';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
+
+  private _endpoint: string = 'http://localhost:4200/auth/confirm?code='
   private _error: any = {
     user: {
       register: {
         exists: "user.register.exists",
         fail: "user.register.fail",
         emailFail: "user.register.emailFail",
-        credentials: "user.register.credentials"
+        credentials: "user.register.credentials",
       },
       login: {
         fail: "user.login.fail"
+      },
+      confirm: {
+        fail: "user.confirm.fail"
       }
     },
     role: {
@@ -32,9 +38,15 @@ export class UserService {
   constructor(
     @InjectModel(User) private userModel: typeof User,
     @InjectModel(UserRole) private userRoleModel: typeof UserRole,
+    private jwtService: JwtService,
     private readonly modelService: ModelService,
     private readonly mailerService: MailerService
   ) {}
+
+  async login(user: any) {
+    user.token = this.jwtService.sign({ username: user.username, sub: user.id })
+    return user
+  }
 
   async register(params: any, roles: number[], test?:boolean): Promise<any> {
     try {
@@ -58,6 +70,24 @@ export class UserService {
     } catch(error) {
       return this.modelService.generateDTO({type:error}, MatsukazeObjectTypes.error);
     }
+  }
+
+  async confirm(params: any): Promise<any> {
+    if(params?.activationCode && params?.email) {
+      return this._findOne({email: params.email, activationCode: params.activationCode}).then(userData => {
+        if(userData) {
+          userData.activationCode = null;
+          userData.active = true;
+          userData.save();
+          userData["username"]=userData.email;
+          this.login(userData);
+          let user = this.modelService.generateDTO(userData, MatsukazeObjectTypes.user);
+          return user;
+        }
+        return this.modelService.generateDTO({type:this._error.user.confirm.fail}, MatsukazeObjectTypes.error);
+      })
+    }
+    return null;
   }
 
   async verify(email: string, password: string): Promise<any> {
@@ -89,7 +119,7 @@ export class UserService {
   }
 
   private async _sendConfirmationEmail(email: string, activationCode: string): Promise<any> {
-    const link: string = 'http://localhost:4200/activate?code=' + activationCode + '&email:' + email
+    const link: string = this._endpoint + activationCode + '&email=' + email
     return await this.mailerService.sendMail({
         to: email,
         from: 'contact@aethon.sg',
