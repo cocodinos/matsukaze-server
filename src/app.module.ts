@@ -91,9 +91,17 @@ import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
       ],
     }),
     MailerModule.forRoot({
-      transport: 'smtps://user@domain.com:pass@smtp.domain.com',
+        transport: {
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // use SSL
+        auth: {
+          user: 'konstantinos.dimitriou@aethon.sg',
+          pass: 'WinterIsComing123'
+        }
+      },
       defaults: {
-        from:'"nest-modules" <modules@nestjs.com>',
+        from:'"Aethon Publishing" <contact@aethon.sg>',
       },
       template: {
         dir: __dirname + '/views',
