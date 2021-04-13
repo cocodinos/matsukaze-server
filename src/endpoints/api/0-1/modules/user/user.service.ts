@@ -25,7 +25,8 @@ export class UserService {
         fail: "user.login.fail"
       },
       confirm: {
-        fail: "user.confirm.fail"
+        fail: "user.confirm.fail",
+        invalidCode: "user.confirm.invalidCode"
       }
     },
     role: {
@@ -43,7 +44,7 @@ export class UserService {
     private readonly mailerService: MailerService
   ) {}
 
-  async login(user: any) {
+  login(user: any): any {
     user.token = this.jwtService.sign({ username: user.username, sub: user.id })
     return user
   }
@@ -79,12 +80,12 @@ export class UserService {
           userData.activationCode = null;
           userData.active = true;
           userData.save();
-          userData["username"]=userData.email;
-          this.login(userData);
           let user = this.modelService.generateDTO(userData, MatsukazeObjectTypes.user);
+          user["username"]=userData.email;
+          user = this.login(user);
           return user;
         }
-        return this.modelService.generateDTO({type:this._error.user.confirm.fail}, MatsukazeObjectTypes.error);
+        return this.modelService.generateDTO({type:this._error.user.confirm.invalidCode}, MatsukazeObjectTypes.error);
       })
     }
     return null;
