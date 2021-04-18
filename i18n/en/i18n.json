@@ -1,0 +1,26 @@
+{
+  "email": {
+    "reset": {
+      "subject": "Reset your Aethon Publishing password",
+      "context": {
+        "body": {
+          "header": "Forgot your password?",
+          "intro": "You have requested a change to your Aethon Publishing password. Please click on the following link to reset your password.",
+          "button": "Reset your password",
+          "thanks": "Thank you very much for your interest!"
+        }
+      }
+    },
+    "register": {
+      "subject": "Welcome to the Aethon Publishing site",
+      "context": {
+        "body": {
+          "header": "Welcome",
+          "intro": "You have requested to create an account on the Aethon Publishing site. Please click on the following link to confirm your account.",
+          "button": "Confirm your account",
+          "thanks": "Thank you very much for your interest!"
+        }
+      }
+    }
+  }
+}

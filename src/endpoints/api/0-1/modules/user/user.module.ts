@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/models/user.model';
 import { UserRole } from 'src/models/user.role.model';
+import { EmailService } from '../../services/email/email.service';
 import { ModelService } from '../../services/model/model.service';
 import { jwtConstants } from '../auth/secrets/jwt.secrets';
 import { UserController } from './user.controller';
@@ -16,7 +17,7 @@ import { UserService } from './user.service';
       signOptions: { expiresIn: jwtConstants.expiresIn },
     })
   ],
-  providers: [UserService, ModelService],
+  providers: [UserService, ModelService, EmailService],
   controllers: [UserController],
   exports: [UserService]
 })

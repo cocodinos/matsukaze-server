@@ -9,7 +9,7 @@ export class UserController {
   @Post("register")
   async register(@Body() data) {
     if(data.email && data.password) {
-      let user = await this.userService.register(data, null);
+      let user = await this.userService.register(data, null, data.lang);
       return user;
     }
     return null;
@@ -19,6 +19,12 @@ export class UserController {
   async confirm(@Query() data) {
     let user = this.userService.confirm(data);
     return user;
+  }
+
+  @Post("requestReset")
+  async requestReset(@Body() data) {
+    let success: any = this.userService.requestReset(data);
+    return true;
   }
 
 }

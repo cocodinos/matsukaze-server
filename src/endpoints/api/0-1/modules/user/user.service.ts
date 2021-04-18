@@ -6,13 +6,14 @@ import { UserRole } from 'src/models/user.role.model';
 import * as bcrypt from 'bcrypt';
 import { ModelService } from '../../services/model/model.service';
 import { MatsukazeObjectTypes } from '../../services/model/model';
-import { MailerService } from '@nestjs-modules/mailer';
 import { JwtService } from '@nestjs/jwt';
+import { EmailService } from '../../services/email/email.service';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class UserService {
 
-  private _endpoint: string = 'http://localhost:4200/auth/confirm?code='
+  private _hostname: string = 'http://localhost:4200/'
   private _error: any = {
     user: {
       register: {
@@ -41,7 +42,8 @@ export class UserService {
     @InjectModel(UserRole) private userRoleModel: typeof UserRole,
     private jwtService: JwtService,
     private readonly modelService: ModelService,
-    private readonly mailerService: MailerService
+    private readonly emailService: EmailService,
+    private readonly i18n: I18nService
   ) {}
 
   login(user: any): any {
@@ -49,13 +51,13 @@ export class UserService {
     return user
   }
 
-  async register(params: any, roles: number[], test?:boolean): Promise<any> {
+  async register(params: any, roles: number[], lang:string): Promise<any> {
     try {
       if(params?.email && params?.password) {
         return this._findOne({email:params.email}).then((user) => {
-          if(!user) return this._create(params.email, params.password, test);
+          if(!user) return this._create(params.email, params.password, lang);
           if(!user.active) {
-            return this._reissueActivationToken(params.email, params.password, test);
+            return this._reissueActivationToken(params.email, params.password, lang);
           } else {
             throw this._error.user.register.exists;
           }
@@ -68,6 +70,37 @@ export class UserService {
         });
       }
       return this.modelService.generateDTO({type:this._error.user.register.credentials}, MatsukazeObjectTypes.error);
+    } catch(error) {
+      return this.modelService.generateDTO({type:error}, MatsukazeObjectTypes.error);
+    }
+  }
+
+  async requestReset(params: any): Promise<any> {
+    try {
+      if(params?.email) {
+        return this._findOne({email:params.email}).then(async (user) => {
+          if(user.active) {
+            user.activationCode = this._generateActivationToken(32);
+            user.save();
+            const emailParams: any = {
+              template: "reset",
+              subject: await this.i18n.translate("i18n.email.reset.subject", {lang: params.lang, args: params}),
+              context: {
+                body: {
+                  header: await this.i18n.translate("i18n.email.reset.context.body.header", {lang: params.lang, args: params}),
+                  intro: await this.i18n.translate("i18n.email.reset.context.body.intro", {lang: params.lang, args: params}),
+                  link: this._hostname + "auth/reset?code=" + user.activationCode + "&email=" + params.email,
+                  button: await this.i18n.translate("i18n.email.reset.context.body.button", {lang: params.lang, args: params}),
+                  thanks: await this.i18n.translate("i18n.email.reset.context.body.thanks", {lang: params.lang, args: params})
+                }
+              }
+            }
+            return this.emailService.sendEmail(params.email, emailParams);
+          } else {
+            return null;
+          }
+        });
+      }
     } catch(error) {
       return this.modelService.generateDTO({type:error}, MatsukazeObjectTypes.error);
     }
@@ -105,39 +138,43 @@ export class UserService {
     });
   }
 
-  private async _reissueActivationToken(email: string, password: string, test?: boolean): Promise<any> {
+  private async _reissueActivationToken(email: string, password: string, lang: string): Promise<any> {
     const activationCode:string = this._generateActivationToken(32);
     let userData:any = null;
 
     return this._hashPassword(password).then(hash => {
       return this._update({email: email}, {activationCode: activationCode, hash: hash})
-    }).then(user => {
+    }).then(async user => {
       userData = user;
-      if(user) return this._sendConfirmationEmail(email, activationCode);
+      if(user) {
+        const emailParams: any = {
+          template: "register",
+          subject: await this.i18n.translate("i18n.email.register.subject", {lang: lang, args: null}),
+          context: {
+            body: {
+              header: await this.i18n.translate("i18n.email.register.context.body.header", {lang: lang, args: null}),
+              intro: await this.i18n.translate("i18n.email.register.context.body.intro", {lang: lang, args: null}),
+              link: this._hostname + "auth/confirm?code=" + user.activationCode + "&email=" + email,
+              button: await this.i18n.translate("i18n.email.register.context.body.button", {lang: lang, args: null}),
+              thanks: await this.i18n.translate("i18n.email.register.context.body.thanks", {lang: lang, args: null})
+            }
+          }
+        }
+        return this.emailService.sendEmail(user.email, emailParams);
+      } else {
+        return null;
+      }
     }).then(()=> {
       return userData;
     })
   }
 
-  private async _sendConfirmationEmail(email: string, activationCode: string): Promise<any> {
-    const link: string = this._endpoint + activationCode + '&email=' + email
-    return await this.mailerService.sendMail({
-        to: email,
-        from: 'contact@aethon.sg',
-        subject: 'Activate your Aethon Publishing account',
-        text: 'Click on ' + link,
-        html: '<p>Thank you for registering with Aethon publishing!</p><p>Click on <a href="' + link + '">' + link + '</a> to activate your account</p>'
-      })
-      .then(() => { return true; })
-      .catch((error) => { console.log(error)} );
-  }
-
-  private _generateActivationToken(size: number): string {
+  private _generateActivationToken(size: number = 32): string {
     return [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
   }
 
   // BASE CRUD OPERATIONS
-  private async _create(email: string, password: string, test?: boolean): Promise<User> {
+  private async _create(email: string, password: string, lang: string): Promise<User> {
     const activationCode:string = this._generateActivationToken(32);
     const hash: string = await this._hashPassword(password);
     let userData: any = null;
@@ -155,10 +192,26 @@ export class UserService {
     }).then(roleData => {
       if(roleData) return this._findOne({email: email});
       throw this._error.user.register.createFail;
-    }).then(user => {
-      userData = user;
-      if(user) return this._sendConfirmationEmail(user.email, activationCode);
-      throw this._error.user.register.emailFail;
+    }).then(async user => {
+      if(user) {
+        userData = user;
+        const emailParams: any = {
+          template: "register",
+          subject: await this.i18n.translate("i18n.email.register.subject", {lang: lang, args: null}),
+          context: {
+            body: {
+              header: await this.i18n.translate("i18n.email.register.context.body.header", {lang: lang, args: null}),
+              intro: await this.i18n.translate("i18n.email.register.context.body.intro", {lang: lang, args: null}),
+              link: this._hostname + "auth/confirm?code=" + user.activationCode + "&email=" + email,
+              button: await this.i18n.translate("i18n.email.register.context.body.button", {lang: lang, args: null}),
+              thanks: await this.i18n.translate("i18n.email.register.context.body.thanks", {lang: lang, args: null})
+            }
+          }
+        }
+        return this.emailService.sendEmail(user.email, emailParams);
+      } else {
+        throw this._error.user.register.emailFail;
+      }
     }).then(() => {
       return userData;
     })

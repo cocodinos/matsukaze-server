@@ -35,6 +35,7 @@ import { StoryStructureElementModule } from './endpoints/api/0-1/modules/story-s
 import { I18nBundleModule } from './endpoints/api/0-1/modules/i18n-bundle/i18n-bundle.module';
 import { ModelService } from './endpoints/api/0-1/services/model/model.service';
 import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
+import { EmailService } from './endpoints/api/0-1/services/email/email.service';
 
 
 @Module({
@@ -91,7 +92,7 @@ import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
       ],
     }),
     MailerModule.forRoot({
-        transport: {
+      transport: {
         host: 'smtp.gmail.com',
         port: 465,
         secure: true, // use SSL
@@ -104,15 +105,15 @@ import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
         from:'"Aethon Publishing" <contact@aethon.sg>',
       },
       template: {
-        dir: __dirname + '/views',
+        dir: process.cwd() + '/emails/',
         adapter: new HandlebarsAdapter(),
         options: {
-          strict: true,
+          strict: true
         },
       },
     })
   ],
   controllers: [RootController],
-  providers: [ModelService],
+  providers: [ModelService, EmailService],
 })
 export class AppModule {}
