@@ -27,4 +27,10 @@ export class UserController {
     return true;
   }
 
+  @Post("reset")
+  async reset(@Body() data) {
+    let success: any = this.userService.reset(data);
+    return success;
+  }
+
 }

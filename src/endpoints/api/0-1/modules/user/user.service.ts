@@ -106,6 +106,27 @@ export class UserService {
     }
   }
 
+
+  async reset(params: any): Promise<any> {
+    try {
+      return this._findOne({email: params.email, activationCode: params.code}).then(async(user) => {
+        if(user) {
+          const hash = await this._hashPassword(params.password);
+          user.activationCode = null;
+          user.hash = hash;
+          user.save();
+          this.modelService.generateDTO(user, MatsukazeObjectTypes.user);
+        } else {
+          throw this._error.user.confirm.invalidCode;
+        }
+      }).catch(error => {
+        return this.modelService.generateDTO({type:error}, MatsukazeObjectTypes.error);
+      });
+    } catch(error) {
+      return this.modelService.generateDTO({type:error}, MatsukazeObjectTypes.error);
+    }
+  }
+
   async confirm(params: any): Promise<any> {
     if(params?.activationCode && params?.email) {
       return this._findOne({email: params.email, activationCode: params.activationCode}).then(userData => {
@@ -127,7 +148,7 @@ export class UserService {
   async verify(email: string, password: string): Promise<any> {
     const user = await this._findOne({email: email, active: true});
     if (user && await bcrypt.compare(password, user.hash)) {
-      return this.modelService.generateDTO(user, MatsukazeObjectTypes.user)
+      return this.modelService.generateDTO(user, MatsukazeObjectTypes.user);
     };
     return null;
   }
