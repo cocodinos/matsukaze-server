@@ -79,7 +79,7 @@ export class UserService {
     try {
       if(params?.email) {
         return this._findOne({email:params.email}).then(async (user) => {
-          if(user.active) {
+          if(user && user?.active) {
             user.activationCode = this._generateActivationToken(32);
             user.save();
             const emailParams: any = {
@@ -89,7 +89,7 @@ export class UserService {
                 body: {
                   header: await this.i18n.translate("i18n.email.reset.context.body.header", {lang: params.lang, args: params}),
                   intro: await this.i18n.translate("i18n.email.reset.context.body.intro", {lang: params.lang, args: params}),
-                  link: this._hostname + "auth/reset?code=" + user.activationCode + "&email=" + params.email,
+                  link: this._hostname + "auth?code=" + user.activationCode + "&email=" + params.email + "&state=00111000&lang=" + params.lang,
                   button: await this.i18n.translate("i18n.email.reset.context.body.button", {lang: params.lang, args: params}),
                   thanks: await this.i18n.translate("i18n.email.reset.context.body.thanks", {lang: params.lang, args: params})
                 }
@@ -154,7 +154,7 @@ export class UserService {
             body: {
               header: await this.i18n.translate("i18n.email.register.context.body.header", {lang: lang, args: null}),
               intro: await this.i18n.translate("i18n.email.register.context.body.intro", {lang: lang, args: null}),
-              link: this._hostname + "auth/confirm?code=" + user.activationCode + "&email=" + email,
+              link: this._hostname + "auth?code=" + user.activationCode + "&email=" + email + "&state=00000111&lang=" + lang,
               button: await this.i18n.translate("i18n.email.register.context.body.button", {lang: lang, args: null}),
               thanks: await this.i18n.translate("i18n.email.register.context.body.thanks", {lang: lang, args: null})
             }
@@ -202,7 +202,7 @@ export class UserService {
             body: {
               header: await this.i18n.translate("i18n.email.register.context.body.header", {lang: lang, args: null}),
               intro: await this.i18n.translate("i18n.email.register.context.body.intro", {lang: lang, args: null}),
-              link: this._hostname + "auth/confirm?code=" + user.activationCode + "&email=" + email,
+              link: this._hostname + "auth?code=" + user.activationCode + "&email=" + email + "&state=00000111&lang=" + lang,
               button: await this.i18n.translate("i18n.email.register.context.body.button", {lang: lang, args: null}),
               thanks: await this.i18n.translate("i18n.email.register.context.body.thanks", {lang: lang, args: null})
             }
