@@ -36,7 +36,7 @@ import { I18nBundleModule } from './endpoints/api/0-1/modules/i18n-bundle/i18n-b
 import { ModelService } from './endpoints/api/0-1/services/model/model.service';
 import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
 import { EmailService } from './endpoints/api/0-1/services/email/email.service';
-
+import { environment } from './../env/environment.test';
 
 @Module({
   imports: [
@@ -48,11 +48,11 @@ import { EmailService } from './endpoints/api/0-1/services/email/email.service';
     I18nBundleModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      host: '127.0.0.1',
-      port: 3306,
-      username: 'root',
-      password: 'NuckyThompson123',
-      database: 'matsukaze',
+      host: environment.sequelize.host,
+      port: environment.sequelize.port,
+      username: environment.sequelize.username,
+      password: environment.sequelize.password,
+      database: environment.sequelize.name,
       models: [
         User,
         Role,
@@ -75,14 +75,14 @@ import { EmailService } from './endpoints/api/0-1/services/email/email.service';
         I18nBundleElement,
         PublicationPage
       ],
-      // logging: false
+      logging: environment.sequelize.logging
     }),
     I18nModule.forRoot({
       fallbackLanguage: "en",
       parser: I18nJsonParser,
       parserOptions: {
         path: path.join(__dirname, '..', '/i18n/'),
-        watch: true // to remove this in deployment for speed
+        watch: environment.i18n.watch
       },
       resolvers: [
         { use: QueryResolver, options: ['lang', 'locale', 'l'] },
@@ -93,16 +93,16 @@ import { EmailService } from './endpoints/api/0-1/services/email/email.service';
     }),
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true, // use SSL
+        host: environment.mail.host,
+        port: environment.mail.port,
+        secure: environment.mail.secure,
         auth: {
-          user: 'konstantinos.dimitriou@aethon.sg',
-          pass: 'WinterIsComing123'
+          user: environment.mail.user,
+          pass: environment.mail.password
         }
       },
       defaults: {
-        from:'"Aethon Publishing" <contact@aethon.sg>',
+        from: environment.mail.name,
       },
       template: {
         dir: process.cwd() + '/emails/',
