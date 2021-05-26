@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "nest build && npm run copy-assets",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -18,7 +18,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "copy-assets": "cp -rv ./i18n ./dist/ && cp -rv ./public ./dist/ && cp -rv ./emails ./dist/"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.5.1",
@@ -28,6 +29,7 @@
     "@nestjs/passport": "^7.1.5",
     "@nestjs/platform-express": "^7.5.1",
     "@nestjs/sequelize": "^0.1.1",
+    "@nestjs/serve-static": "^2.1.4",
     "bcrypt": "^5.0.1",
     "compression": "^1.7.4",
     "hbs": "^4.1.1",

@@ -1,7 +1,8 @@
 {
   "collection": "@nestjs/schematics",
+  "deleteOutDir": true,
   "sourceRoot": "src",
   "compilerOptions": {
-    "assets": ["i18n/**/*"]
+    "assets": ["**/i18n/**/*"]
   }
 }

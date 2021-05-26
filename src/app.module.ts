@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import * as path from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { I18nModule, I18nJsonParser, QueryResolver, HeaderResolver, AcceptLanguageResolver, CookieResolver } from 'nestjs-i18n';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { environment } from './../env/environment.test';
 
 // Sequelize data models
 import { User } from './models/user.model';
@@ -28,7 +30,6 @@ import { PublicationPage } from './models/publication.page.model';
 import { StoryStructureElement } from './models/story-structure-element.model';
 
 // Enpoint modules
-import { RootController } from './endpoints/root/root.controller';
 import { UserModule } from './endpoints/api/0-1/modules/user/user.module';
 import { AuthModule } from './endpoints/api/0-1/modules/auth/auth.module';
 import { StoryStructureElementModule } from './endpoints/api/0-1/modules/story-structure-element/story-structure-element.module';
@@ -36,7 +37,7 @@ import { I18nBundleModule } from './endpoints/api/0-1/modules/i18n-bundle/i18n-b
 import { ModelService } from './endpoints/api/0-1/services/model/model.service';
 import { StoryModule } from './endpoints/api/0-1/modules/story/story.module';
 import { EmailService } from './endpoints/api/0-1/services/email/email.service';
-import { environment } from './../env/environment.test';
+
 
 @Module({
   imports: [
@@ -77,6 +78,9 @@ import { environment } from './../env/environment.test';
       ],
       logging: environment.sequelize.logging
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, "..", '/public/client/'),
+    }),
     I18nModule.forRoot({
       fallbackLanguage: "en",
       parser: I18nJsonParser,
@@ -113,7 +117,7 @@ import { environment } from './../env/environment.test';
       },
     })
   ],
-  controllers: [RootController],
+  controllers: [],
   providers: [ModelService, EmailService],
 })
 export class AppModule {}
