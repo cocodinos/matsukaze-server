@@ -10,12 +10,12 @@ export const environment = {
     logging: true
   },
   mail: {
-    host: 'smtp.gmail.com',
+    host: 'email-smtp.us-west-2.amazonaws.com',
     port: 465,
     secure: true,
-    user: 'konstantinos.dimitriou@aethon.sg',
-    password: 'WinterIsComing123',
-    name: 'Aethon Publishing" <contact@aethon.sg>'
+    user: 'AKIAWBDSGSY5V4P5SXF4',
+    password: 'BCOq7+aePru24iqLR5Cn45RLjZ4WnX9VFTdr7N85+2Jk',
+    name: 'Aethon <contact@aethon.sg>'
   },
   i18n: {
     watch: true
